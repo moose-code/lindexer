@@ -122,6 +122,32 @@ module Token = {
   }
 }
 
+module Metadata = {
+  let createMetadataTable: unit => promise<unit> = async () => {
+    await %raw(
+      "sql`CREATE TABLE \"public\".\"metadata\" (\"id\" text NOT NULL,\"tokenId\" numeric NOT NULL,\"name\" text NOT NULL,\"description\" text NOT NULL,\"image\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+    )
+  }
+
+  let deleteMetadataTable: unit => promise<unit> = async () => {
+    // NOTE: we can refine the `IF EXISTS` part because this now prints to the terminal if the table doesn't exist (which isn't nice for the developer).
+    await %raw("sql`DROP TABLE IF EXISTS \"public\".\"metadata\";`")
+  }
+}
+
+module Attribute = {
+  let createAttributeTable: unit => promise<unit> = async () => {
+    await %raw(
+      "sql`CREATE TABLE \"public\".\"attribute\" (\"id\" text NOT NULL,\"tokenId\" numeric NOT NULL,\"trait_type\" text NOT NULL,\"value\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+    )
+  }
+
+  let deleteAttributeTable: unit => promise<unit> = async () => {
+    // NOTE: we can refine the `IF EXISTS` part because this now prints to the terminal if the table doesn't exist (which isn't nice for the developer).
+    await %raw("sql`DROP TABLE IF EXISTS \"public\".\"attribute\";`")
+  }
+}
+
 let deleteAllTables: unit => promise<unit> = async () => {
   // NOTE: we can refine the `IF EXISTS` part because this now prints to the terminal if the table doesn't exist (which isn't nice for the developer).
 
@@ -163,6 +189,14 @@ let runUpMigrations = async shouldExit => {
     exitCode := Failure
     Logging.errorWithExn(err, `Error creating Token table`)->Promise.resolve
   })
+  await Metadata.createMetadataTable()->Promise.catch(err => {
+    exitCode := Failure
+    Logging.errorWithExn(err, `Error creating Metadata table`)->Promise.resolve
+  })
+  await Attribute.createAttributeTable()->Promise.catch(err => {
+    exitCode := Failure
+    Logging.errorWithExn(err, `Error creating Attribute table`)->Promise.resolve
+  })
   await TrackTables.trackAllTables()->Promise.catch(err => {
     Logging.errorWithExn(err, `Error tracking tables`)->Promise.resolve
   })
@@ -180,6 +214,10 @@ let runDownMigrations = async shouldExit => {
   // await User.deleteUserTable()
   //
   // await Token.deleteTokenTable()
+  //
+  // await Metadata.deleteMetadataTable()
+  //
+  // await Attribute.deleteAttributeTable()
   //
 
   await RawEventsTable.dropRawEventsTable()->Promise.catch(err => {

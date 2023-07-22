@@ -133,10 +133,70 @@ module InMemoryStore = {
       )
     }
   }
+
+  module Metadata = {
+    let metadataDict: ref<Js.Dict.t<Types.inMemoryStoreRow<Types.metadataEntity>>> = ref(
+      Js.Dict.empty(),
+    )
+
+    let getMetadata = (~id: string) => {
+      let row = Js.Dict.get(metadataDict.contents, id)
+      row->Belt.Option.map(row => row.entity)
+    }
+
+    let setMetadata = (
+      ~entity: Types.metadataEntity,
+      ~dbOp: Types.dbOp,
+      ~eventData: Types.eventData,
+    ) => {
+      let metadataCurrentCrud = Js.Dict.get(
+        metadataDict.contents,
+        entity.id,
+      )->Belt.Option.map(row => {
+        row.dbOp
+      })
+
+      metadataDict.contents->Js.Dict.set(
+        entity.id,
+        {eventData, entity, dbOp: entityCurrentCrud(metadataCurrentCrud, dbOp)},
+      )
+    }
+  }
+
+  module Attribute = {
+    let attributeDict: ref<Js.Dict.t<Types.inMemoryStoreRow<Types.attributeEntity>>> = ref(
+      Js.Dict.empty(),
+    )
+
+    let getAttribute = (~id: string) => {
+      let row = Js.Dict.get(attributeDict.contents, id)
+      row->Belt.Option.map(row => row.entity)
+    }
+
+    let setAttribute = (
+      ~entity: Types.attributeEntity,
+      ~dbOp: Types.dbOp,
+      ~eventData: Types.eventData,
+    ) => {
+      let attributeCurrentCrud = Js.Dict.get(
+        attributeDict.contents,
+        entity.id,
+      )->Belt.Option.map(row => {
+        row.dbOp
+      })
+
+      attributeDict.contents->Js.Dict.set(
+        entity.id,
+        {eventData, entity, dbOp: entityCurrentCrud(attributeCurrentCrud, dbOp)},
+      )
+    }
+  }
   let resetStore = () => {
     Nftcollection.nftcollectionDict := Js.Dict.empty()
     User.userDict := Js.Dict.empty()
     Token.tokenDict := Js.Dict.empty()
+    Metadata.metadataDict := Js.Dict.empty()
+    Attribute.attributeDict := Js.Dict.empty()
   }
 }
 
@@ -149,12 +209,16 @@ let loadEntities = async (sql, entityBatch: array<Types.entityRead>) => {
   let uniqueNftcollectionDict = Js.Dict.empty()
   let uniqueUserDict = Js.Dict.empty()
   let uniqueTokenDict = Js.Dict.empty()
+  let uniqueMetadataDict = Js.Dict.empty()
+  let uniqueAttributeDict = Js.Dict.empty()
 
   let populateLoadAsEntityFunctions: ref<array<unit => unit>> = ref([])
 
   let uniqueNftcollectionAsEntityFieldArray: ref<array<string>> = ref([])
   let uniqueUserAsEntityFieldArray: ref<array<string>> = ref([])
   let uniqueTokenAsEntityFieldArray: ref<array<string>> = ref([])
+  let uniqueMetadataAsEntityFieldArray: ref<array<string>> = ref([])
+  let uniqueAttributeAsEntityFieldArray: ref<array<string>> = ref([])
 
   let rec nftcollectionLinkedEntityLoader = (entityId: string, layer: int) => {
     if !loadLayer.contents {
@@ -224,12 +288,40 @@ let loadEntities = async (sql, entityBatch: array<Types.entityRead>) => {
     }
     ()
   }
+  @warning("-27")
+  and metadataLinkedEntityLoader = (entityId: string, layer: int) => {
+    if !loadLayer.contents {
+      // NOTE: Always set this to true if it is false, I'm sure there are optimizations. Correctness over optimization for now.
+      loadLayer := true
+    }
+    if Js.Dict.get(uniqueMetadataDict, entityId)->Belt.Option.isNone {
+      let _ = uniqueMetadataAsEntityFieldArray.contents->Js.Array2.push(entityId)
+      let _ = Js.Dict.set(uniqueMetadataDict, entityId, entityId)
+    }
+
+    ()
+  }
+  @warning("-27")
+  and attributeLinkedEntityLoader = (entityId: string, layer: int) => {
+    if !loadLayer.contents {
+      // NOTE: Always set this to true if it is false, I'm sure there are optimizations. Correctness over optimization for now.
+      loadLayer := true
+    }
+    if Js.Dict.get(uniqueAttributeDict, entityId)->Belt.Option.isNone {
+      let _ = uniqueAttributeAsEntityFieldArray.contents->Js.Array2.push(entityId)
+      let _ = Js.Dict.set(uniqueAttributeDict, entityId, entityId)
+    }
+
+    ()
+  }
 
   entityBatch->Belt.Array.forEach(readEntity => {
     switch readEntity {
     | NftcollectionRead(entityId) => nftcollectionLinkedEntityLoader(entityId, 0)
     | UserRead(entityId) => userLinkedEntityLoader(entityId, 0)
     | TokenRead(entityId, tokenLoad) => tokenLinkedEntityLoader(entityId, tokenLoad, 0)
+    | MetadataRead(entityId) => metadataLinkedEntityLoader(entityId, 0)
+    | AttributeRead(entityId) => attributeLinkedEntityLoader(entityId, 0)
     }
   })
 
@@ -270,6 +362,32 @@ let loadEntities = async (sql, entityBatch: array<Types.entityRead>) => {
       })
 
       uniqueTokenAsEntityFieldArray := []
+    }
+    if uniqueMetadataAsEntityFieldArray.contents->Array.length > 0 {
+      let metadataFieldEntitiesArray =
+        await sql->DbFunctions.Metadata.readMetadataEntities(
+          uniqueMetadataAsEntityFieldArray.contents,
+        )
+
+      metadataFieldEntitiesArray->Belt.Array.forEach(readRow => {
+        let {entity, eventData} = DbFunctions.Metadata.readRowToReadEntityData(readRow)
+        InMemoryStore.Metadata.setMetadata(~entity, ~eventData, ~dbOp=Types.Read)
+      })
+
+      uniqueMetadataAsEntityFieldArray := []
+    }
+    if uniqueAttributeAsEntityFieldArray.contents->Array.length > 0 {
+      let attributeFieldEntitiesArray =
+        await sql->DbFunctions.Attribute.readAttributeEntities(
+          uniqueAttributeAsEntityFieldArray.contents,
+        )
+
+      attributeFieldEntitiesArray->Belt.Array.forEach(readRow => {
+        let {entity, eventData} = DbFunctions.Attribute.readRowToReadEntityData(readRow)
+        InMemoryStore.Attribute.setAttribute(~entity, ~eventData, ~dbOp=Types.Read)
+      })
+
+      uniqueAttributeAsEntityFieldArray := []
     }
 
     let functionsToExecute = populateLoadAsEntityFunctions.contents
@@ -440,6 +558,72 @@ let executeBatch = async sql => {
     }
   }
 
+  let metadataRows = InMemoryStore.Metadata.metadataDict.contents->Js.Dict.values
+
+  let deleteMetadataIdsPromise = sql => {
+    let deleteMetadataIds =
+      metadataRows
+      ->Belt.Array.keepMap(metadataRow =>
+        metadataRow.dbOp == Types.Delete ? Some(metadataRow.entity) : None
+      )
+      ->Belt.Array.map(metadata => metadata.id)
+
+    if deleteMetadataIds->Belt.Array.length > 0 {
+      sql->DbFunctions.Metadata.batchDeleteMetadata(deleteMetadataIds)
+    } else {
+      ()->Promise.resolve
+    }
+  }
+  let setMetadataPromise = sql => {
+    let setMetadata = metadataRows->Belt.Array.keepMap(metadataRow =>
+      metadataRow.dbOp == Types.Set
+        ? Some({
+            ...metadataRow,
+            entity: metadataRow.entity->Types.metadataEntity_encode,
+          })
+        : None
+    )
+
+    if setMetadata->Belt.Array.length > 0 {
+      sql->DbFunctions.Metadata.batchSetMetadata(setMetadata)
+    } else {
+      ()->Promise.resolve
+    }
+  }
+
+  let attributeRows = InMemoryStore.Attribute.attributeDict.contents->Js.Dict.values
+
+  let deleteAttributeIdsPromise = sql => {
+    let deleteAttributeIds =
+      attributeRows
+      ->Belt.Array.keepMap(attributeRow =>
+        attributeRow.dbOp == Types.Delete ? Some(attributeRow.entity) : None
+      )
+      ->Belt.Array.map(attribute => attribute.id)
+
+    if deleteAttributeIds->Belt.Array.length > 0 {
+      sql->DbFunctions.Attribute.batchDeleteAttribute(deleteAttributeIds)
+    } else {
+      ()->Promise.resolve
+    }
+  }
+  let setAttributePromise = sql => {
+    let setAttribute = attributeRows->Belt.Array.keepMap(attributeRow =>
+      attributeRow.dbOp == Types.Set
+        ? Some({
+            ...attributeRow,
+            entity: attributeRow.entity->Types.attributeEntity_encode,
+          })
+        : None
+    )
+
+    if setAttribute->Belt.Array.length > 0 {
+      sql->DbFunctions.Attribute.batchSetAttribute(setAttribute)
+    } else {
+      ()->Promise.resolve
+    }
+  }
+
   let res = await sql->Postgres.beginSql(sql => {
     [
       sql->setRawEventsPromise,
@@ -451,6 +635,10 @@ let executeBatch = async sql => {
       sql->setUserPromise,
       sql->deleteTokenIdsPromise,
       sql->setTokenPromise,
+      sql->deleteMetadataIdsPromise,
+      sql->setMetadataPromise,
+      sql->deleteAttributeIdsPromise,
+      sql->setAttributePromise,
     ]
   })
 

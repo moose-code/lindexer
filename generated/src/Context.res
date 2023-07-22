@@ -132,6 +132,20 @@ Please consider loading the user in the UpdateToken entity loader to greatly imp
               }
             },
           },
+          metadata: {
+            set: entity => {
+              IO.InMemoryStore.Metadata.setMetadata(~entity, ~dbOp=Types.Set, ~eventData)
+            },
+            delete: id =>
+              Logging.warn(`[unimplemented delete] can't delete entity(metadata) with ID ${id}.`),
+          },
+          attribute: {
+            set: entity => {
+              IO.InMemoryStore.Attribute.setAttribute(~entity, ~dbOp=Types.Set, ~eventData)
+            },
+            delete: id =>
+              Logging.warn(`[unimplemented delete] can't delete entity(attribute) with ID ${id}.`),
+          },
         },
       }
     }

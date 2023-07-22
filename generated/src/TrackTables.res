@@ -132,6 +132,10 @@ let trackAllTables = async () => {
   let _ = await createSelectPermissions(~tableName="user")
   let _ = await trackTable(~tableName="token")
   let _ = await createSelectPermissions(~tableName="token")
+  let _ = await trackTable(~tableName="metadata")
+  let _ = await createSelectPermissions(~tableName="metadata")
+  let _ = await trackTable(~tableName="attribute")
+  let _ = await createSelectPermissions(~tableName="attribute")
   let _ = await createEntityRelationship(
     ~tableName="user",
     ~relationshipType="array",
@@ -152,5 +156,19 @@ let trackAllTables = async () => {
     ~relationalKey="owner",
     ~mappedEntity="user",
     ~derivedFromFieldKey="",
+  )
+  let _ = await createEntityRelationship(
+    ~tableName="token",
+    ~relationshipType="object",
+    ~relationalKey="metadata",
+    ~mappedEntity="metadata",
+    ~derivedFromFieldKey="tokenId",
+  )
+  let _ = await createEntityRelationship(
+    ~tableName="metadata",
+    ~relationshipType="array",
+    ~relationalKey="attributes",
+    ~mappedEntity="attribute",
+    ~derivedFromFieldKey="tokenId",
   )
 }

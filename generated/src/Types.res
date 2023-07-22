@@ -12,6 +12,8 @@ type id = string
 type rec nftcollectionLoaderConfig = bool
 and userLoaderConfig = bool
 and tokenLoaderConfig = {loadCollection?: nftcollectionLoaderConfig, loadOwner?: userLoaderConfig}
+and metadataLoaderConfig = bool
+and attributeLoaderConfig = bool
 
 @@warning("+30")
 
@@ -19,12 +21,16 @@ type entityRead =
   | NftcollectionRead(id)
   | UserRead(id)
   | TokenRead(id, tokenLoaderConfig)
+  | MetadataRead(id)
+  | AttributeRead(id)
 
 let entitySerialize = (entity: entityRead) => {
   switch entity {
   | NftcollectionRead(id) => `nftcollection${id}`
   | UserRead(id) => `user${id}`
   | TokenRead(id, _) => `token${id}`
+  | MetadataRead(id) => `metadata${id}`
+  | AttributeRead(id) => `attribute${id}`
   }
 }
 
@@ -70,10 +76,29 @@ type tokenEntity = {
   owner: id,
 }
 
+@spice @genType
+type metadataEntity = {
+  id: string,
+  tokenId: Ethers.BigInt.t,
+  name: string,
+  description: string,
+  image: string,
+}
+
+@spice @genType
+type attributeEntity = {
+  id: string,
+  tokenId: Ethers.BigInt.t,
+  trait_type: string,
+  value: string,
+}
+
 type entity =
   | NftcollectionEntity(nftcollectionEntity)
   | UserEntity(userEntity)
   | TokenEntity(tokenEntity)
+  | MetadataEntity(metadataEntity)
+  | AttributeEntity(attributeEntity)
 
 type dbOp = Read | Set | Delete
 
@@ -128,12 +153,22 @@ module ERC721Contract = {
       set: tokenEntity => unit,
       delete: id => unit,
     }
+    type metadataEntityHandlerContext = {
+      set: metadataEntity => unit,
+      delete: id => unit,
+    }
+    type attributeEntityHandlerContext = {
+      set: attributeEntity => unit,
+      delete: id => unit,
+    }
     @genType
     type context = {
       log: Logs.userLogger,
       nftcollection: nftcollectionEntityHandlerContext,
       user: userEntityHandlerContext,
       token: tokenEntityHandlerContext,
+      metadata: metadataEntityHandlerContext,
+      attribute: attributeEntityHandlerContext,
     }
 
     @genType

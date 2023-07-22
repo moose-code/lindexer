@@ -32,7 +32,7 @@ export const ERC721Contract_Transfer_handler: (userHandler:((_1:{ readonly event
       const result1 = Arg1({event:Argevent, context:{log:{debug:Argcontext.log.debug, info:Argcontext.log.info, warn:Argcontext.log.warn, error:Argcontext.log.error, errorWithExn:function (Arg11: any, Arg2: any) {
           const result2 = Curry._2(Argcontext.log.errorWithExn, Arg11, Arg2);
           return result2
-        }}, nftcollection:Argcontext.nftcollection, user:Argcontext.user, token:Argcontext.token}});
+        }}, nftcollection:Argcontext.nftcollection, user:Argcontext.user, token:Argcontext.token, metadata:Argcontext.metadata, attribute:Argcontext.attribute}});
       return result1
     });
   return result

@@ -43,6 +43,23 @@ export type tokenEntity = {
 };
 
 // tslint:disable-next-line:interface-over-type-literal
+export type metadataEntity = {
+  readonly id: string; 
+  readonly tokenId: Ethers_BigInt_t; 
+  readonly name: string; 
+  readonly description: string; 
+  readonly image: string
+};
+
+// tslint:disable-next-line:interface-over-type-literal
+export type attributeEntity = {
+  readonly id: string; 
+  readonly tokenId: Ethers_BigInt_t; 
+  readonly trait_type: string; 
+  readonly value: string
+};
+
+// tslint:disable-next-line:interface-over-type-literal
 export type eventLog<a> = {
   readonly params: a; 
   readonly blockNumber: number; 
@@ -81,11 +98,19 @@ export type ERC721Contract_TransferEvent_tokenEntityHandlerContext = {
 };
 
 // tslint:disable-next-line:interface-over-type-literal
+export type ERC721Contract_TransferEvent_metadataEntityHandlerContext = { readonly set: (_1:metadataEntity) => void; readonly delete: (_1:id) => void };
+
+// tslint:disable-next-line:interface-over-type-literal
+export type ERC721Contract_TransferEvent_attributeEntityHandlerContext = { readonly set: (_1:attributeEntity) => void; readonly delete: (_1:id) => void };
+
+// tslint:disable-next-line:interface-over-type-literal
 export type ERC721Contract_TransferEvent_context = {
   readonly log: Logs_userLogger; 
   readonly nftcollection: ERC721Contract_TransferEvent_nftcollectionEntityHandlerContext; 
   readonly user: ERC721Contract_TransferEvent_userEntityHandlerContext; 
-  readonly token: ERC721Contract_TransferEvent_tokenEntityHandlerContext
+  readonly token: ERC721Contract_TransferEvent_tokenEntityHandlerContext; 
+  readonly metadata: ERC721Contract_TransferEvent_metadataEntityHandlerContext; 
+  readonly attribute: ERC721Contract_TransferEvent_attributeEntityHandlerContext
 };
 
 // tslint:disable-next-line:interface-over-type-literal

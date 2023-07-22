@@ -95,14 +95,13 @@ module Nftcollection = {
   > => {
     let {id, contractAddress, name, symbol, maxSupply, currentSupply, chainId, eventId} = readRow
 
-    let maxSupply = maxSupply->Belt.Option.flatMap(bn => bn->Ethers.BigInt.fromString)
     {
       entity: {
         id,
         contractAddress,
         ?name,
         ?symbol,
-        ?maxSupply,
+        maxSupply: ?maxSupply->Belt.Option.flatMap(Ethers.BigInt.fromString),
         currentSupply,
       },
       eventData: {
@@ -167,6 +166,7 @@ module Token = {
     tokenId: string,
     collection: id,
     owner: id,
+    metadata: option<id>,
     @as("event_chain_id") chainId: int,
     @as("event_id") eventId: Ethers.BigInt.t,
   }
@@ -177,7 +177,7 @@ module Token = {
     {
       entity: {
         id,
-        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe,
+        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe, // We know it will always be defined
         collection,
         owner,
       },
@@ -199,4 +199,97 @@ module Token = {
   @module("./DbFunctionsImplementation.js")
   external readTokenEntities: (Postgres.sql, array<Types.id>) => promise<array<tokenReadRow>> =
     "readTokenEntities"
+}
+module Metadata = {
+  open Types
+  type metadataReadRow = {
+    id: string,
+    tokenId: string,
+    name: string,
+    description: string,
+    image: string,
+    attributes: array<id>,
+    @as("event_chain_id") chainId: int,
+    @as("event_id") eventId: Ethers.BigInt.t,
+  }
+
+  let readRowToReadEntityData = (readRow: metadataReadRow): readEntityData<
+    Types.metadataEntity,
+  > => {
+    let {id, tokenId, name, description, image, chainId, eventId} = readRow
+
+    {
+      entity: {
+        id,
+        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe, // We know it will always be defined
+        name,
+        description,
+        image,
+      },
+      eventData: {
+        chainId,
+        eventId: eventId->Ethers.BigInt.toString,
+      },
+    }
+  }
+  @module("./DbFunctionsImplementation.js")
+  external batchSetMetadata: (
+    Postgres.sql,
+    array<Types.inMemoryStoreRow<Js.Json.t>>,
+  ) => promise<unit> = "batchSetMetadata"
+
+  @module("./DbFunctionsImplementation.js")
+  external batchDeleteMetadata: (Postgres.sql, array<Types.id>) => promise<unit> =
+    "batchDeleteMetadata"
+
+  @module("./DbFunctionsImplementation.js")
+  external readMetadataEntities: (
+    Postgres.sql,
+    array<Types.id>,
+  ) => promise<array<metadataReadRow>> = "readMetadataEntities"
+}
+module Attribute = {
+  open Types
+  type attributeReadRow = {
+    id: string,
+    tokenId: string,
+    trait_type: string,
+    value: string,
+    @as("event_chain_id") chainId: int,
+    @as("event_id") eventId: Ethers.BigInt.t,
+  }
+
+  let readRowToReadEntityData = (readRow: attributeReadRow): readEntityData<
+    Types.attributeEntity,
+  > => {
+    let {id, tokenId, trait_type, value, chainId, eventId} = readRow
+
+    {
+      entity: {
+        id,
+        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe, // We know it will always be defined
+        trait_type,
+        value,
+      },
+      eventData: {
+        chainId,
+        eventId: eventId->Ethers.BigInt.toString,
+      },
+    }
+  }
+  @module("./DbFunctionsImplementation.js")
+  external batchSetAttribute: (
+    Postgres.sql,
+    array<Types.inMemoryStoreRow<Js.Json.t>>,
+  ) => promise<unit> = "batchSetAttribute"
+
+  @module("./DbFunctionsImplementation.js")
+  external batchDeleteAttribute: (Postgres.sql, array<Types.id>) => promise<unit> =
+    "batchDeleteAttribute"
+
+  @module("./DbFunctionsImplementation.js")
+  external readAttributeEntities: (
+    Postgres.sql,
+    array<Types.id>,
+  ) => promise<array<attributeReadRow>> = "readAttributeEntities"
 }

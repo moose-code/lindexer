@@ -259,6 +259,7 @@ SELECT
 "tokenId",
 "collection",
 "owner",
+
 event_chain_id, 
 event_id
 FROM public.token
@@ -276,6 +277,7 @@ ${sql(combinedEntityAndEventData,
     "tokenId",
     "collection",
     "owner",
+    
     "event_chain_id",
     "event_id",
   )}
@@ -285,6 +287,7 @@ ${sql(combinedEntityAndEventData,
   "tokenId" = EXCLUDED."tokenId",
   "collection" = EXCLUDED."collection",
   "owner" = EXCLUDED."owner",
+  
   "event_chain_id" = EXCLUDED."event_chain_id",
   "event_id" = EXCLUDED."event_id";`;
 }
@@ -301,4 +304,116 @@ DELETE
 FROM public.token
 WHERE id IN ${sql(entityIdArray)};`
 // end db operations for Token
+
+//////////////////////////////////////////////
+// DB operations for Metadata:
+//////////////////////////////////////////////
+
+module.exports.readMetadataEntities = (sql, entityIdArray) => sql`
+SELECT 
+"id",
+"tokenId",
+"name",
+"description",
+"image",
+
+event_chain_id, 
+event_id
+FROM public.metadata
+WHERE id IN ${sql(entityIdArray)};`;
+
+const batchSetMetadataCore = (sql, entityDataArray) => {
+  const combinedEntityAndEventData = entityDataArray.map((entityData) => ({
+    ...entityData.entity,
+    ...entityData.eventData,
+  }));
+  return sql`
+    INSERT INTO public.metadata
+${sql(combinedEntityAndEventData,
+    "id",
+    "tokenId",
+    "name",
+    "description",
+    "image",
+    
+    "event_chain_id",
+    "event_id",
+  )}
+  ON CONFLICT(id) DO UPDATE
+  SET
+  "id" = EXCLUDED."id",
+  "tokenId" = EXCLUDED."tokenId",
+  "name" = EXCLUDED."name",
+  "description" = EXCLUDED."description",
+  "image" = EXCLUDED."image",
+  
+  "event_chain_id" = EXCLUDED."event_chain_id",
+  "event_id" = EXCLUDED."event_id";`;
+}
+
+module.exports.batchSetMetadata = (sql, entityDataArray) => {
+  // TODO: make this max batch size optimal. Do calculations to achieve this.
+  const MAX_ITEMS_PER_QUERY_Metadata = 50;
+
+  return chunkBatchQuery(sql, entityDataArray, MAX_ITEMS_PER_QUERY_Metadata, batchSetMetadataCore);
+}
+
+module.exports.batchDeleteMetadata = (sql, entityIdArray) => sql`
+DELETE
+FROM public.metadata
+WHERE id IN ${sql(entityIdArray)};`
+// end db operations for Metadata
+
+//////////////////////////////////////////////
+// DB operations for Attribute:
+//////////////////////////////////////////////
+
+module.exports.readAttributeEntities = (sql, entityIdArray) => sql`
+SELECT 
+"id",
+"tokenId",
+"trait_type",
+"value",
+event_chain_id, 
+event_id
+FROM public.attribute
+WHERE id IN ${sql(entityIdArray)};`;
+
+const batchSetAttributeCore = (sql, entityDataArray) => {
+  const combinedEntityAndEventData = entityDataArray.map((entityData) => ({
+    ...entityData.entity,
+    ...entityData.eventData,
+  }));
+  return sql`
+    INSERT INTO public.attribute
+${sql(combinedEntityAndEventData,
+    "id",
+    "tokenId",
+    "trait_type",
+    "value",
+    "event_chain_id",
+    "event_id",
+  )}
+  ON CONFLICT(id) DO UPDATE
+  SET
+  "id" = EXCLUDED."id",
+  "tokenId" = EXCLUDED."tokenId",
+  "trait_type" = EXCLUDED."trait_type",
+  "value" = EXCLUDED."value",
+  "event_chain_id" = EXCLUDED."event_chain_id",
+  "event_id" = EXCLUDED."event_id";`;
+}
+
+module.exports.batchSetAttribute = (sql, entityDataArray) => {
+  // TODO: make this max batch size optimal. Do calculations to achieve this.
+  const MAX_ITEMS_PER_QUERY_Attribute = 50;
+
+  return chunkBatchQuery(sql, entityDataArray, MAX_ITEMS_PER_QUERY_Attribute, batchSetAttributeCore);
+}
+
+module.exports.batchDeleteAttribute = (sql, entityIdArray) => sql`
+DELETE
+FROM public.attribute
+WHERE id IN ${sql(entityIdArray)};`
+// end db operations for Attribute
 
