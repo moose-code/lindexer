@@ -35,7 +35,7 @@ async function fetchNFTContractData(contractAddress: string): Promise<any> {
 async function fetchNFTMetadata(
   contractAddress: string,
   tokenId: string
-): Promise<void> {
+): Promise<any> {
   const contract = new ethers.Contract(
     contractAddress,
     ["function tokenURI(uint256 tokenId) external view returns (string)"],
