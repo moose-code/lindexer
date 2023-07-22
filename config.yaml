@@ -19,6 +19,8 @@ networks:
         address:
           #Linea Bored Ape for mainnet?
           - "0x56B8b60e9aa4c94286bF7139C8f5CD09903D835d"
+          - "0xB62C414ABf83c0107DB84f8dE1c88631C05A8D7B"
+          - "0xA9d89db621Ce93102c1E8A7Ae6261023B1258361"
         handler: ./src/EventHandlers.bs.js
         events:
           - event: "Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
