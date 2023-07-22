@@ -17,6 +17,7 @@
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "ethers": "^6",
+    "ipfs-client": "^0.10.1",
     "ipfs-core": "^0.18.1",
     "js-yaml": "^4.1.0",
     "pg-promise": "^11.5.0",

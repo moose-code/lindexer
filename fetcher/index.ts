@@ -4,6 +4,13 @@ import { config } from "dotenv";
 import pgPromise from "pg-promise";
 import { readFileSync } from "fs";
 import { parse } from "yaml";
+const fs = require('fs');
+const path = require('path');
+
+const cacheDir = path.join(__dirname, 'metadata-cache');
+if (!fs.existsSync(cacheDir)) {
+  fs.mkdirSync(cacheDir);
+}
 
 // import * as IPFS from 'ipfs-core';
 
@@ -13,14 +20,26 @@ const ipfsProviders = [
   "gateway.pinata.cloud",
   "cloudflare-ipfs.com",
   "ipfs.io",
-  // "dweb.link",
-  "gateway.ipfs.io",
-  "via0.com",
-  "ipfs.eternum.io",
   "cf-ipfs.com",
-  // "gw3.io",
-  "konubinix.eu",
   "ipfs.eth.aragon.network",
+  "ipfs.io",
+  "cloudflare-ipfs.com",
+  "cf-ipfs.com",
+  "ipfs.eth.aragon.network",
+  "cloudflare-ipfs.com",
+  "ipfs.io",
+  "cf-ipfs.com",
+  "ipfs.eth.aragon.network",
+  "ipfs.io",
+  "cloudflare-ipfs.com",
+  "cf-ipfs.com",
+  "ipfs.eth.aragon.network",
+  // "dweb.link",
+  // "gateway.ipfs.io",
+  // "via0.com",
+  // "ipfs.eternum.io",
+  // "gw3.io",
+  // "konubinix.eu",
   // "ipfs.scalaproject.io",
   // "dweb.eu.org",
   // "nftstorage.link",
@@ -122,6 +141,7 @@ async function fetchNFTMetadata(
   contractAddress: string,
   token_id: string
 ): Promise<any> {
+  console.log(`loading token ${contractAddress} - ${token_id}`)
   const contract = new ethers.Contract(
     contractAddress,
     ["function tokenURI(uint256 token_id) external view returns (string)"],
@@ -132,39 +152,67 @@ async function fetchNFTMetadata(
 
   let dataReturned
   if (tokenURI.startsWith("ipfs://")) {
+    let fileName = tokenURI.replace("ipfs://", "").replace("/", "-"); // replace with the preferred file extension
+    let filePath = path.join(cacheDir, fileName);
+
     let bucket = parseInt(token_id) % ipfsProviders.length;
+    if (fs.existsSync(filePath)) {
+      // If file exists, load it and log message
+      dataReturned = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      // console.log('Data loaded from cache:', filePath);
+    } else {
+      const { data } = await axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        .catch(e => {
+          console.log("Errored with", ipfsProviders[bucket], "trying next")
+          bucket = (bucket + 1) % ipfsProviders.length
+          return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        })
+        .catch(e => {
+          bucket = (bucket + 1) % ipfsProviders.length
+          console.log("Errored with", ipfsProviders[bucket], "trying next")
+          return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        })
+        .catch(e => {
+          bucket = (bucket + 1) % ipfsProviders.length
+          console.log("Errored with", ipfsProviders[bucket], "trying next")
+          return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        })
+        .catch(e => {
+          bucket = (bucket + 1) % ipfsProviders.length
+          console.log("Errored with", ipfsProviders[bucket], "trying next")
+          return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        })
+        .catch(e => {
+          bucket = (bucket + 1) % ipfsProviders.length
+          console.log("Errored with", ipfsProviders[bucket], "trying next")
+          return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
+        })
+      // console.log(`data fetched with https://${ipfsProviders[bucket]}/ipfs/`, data)
+      console.log(`data fetched with https://${ipfsProviders[bucket]}/ipfs/`)
 
-    const { data } = await axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      .catch(e => {
-        console.log("Errored with", ipfsProviders[bucket], "trying next")
-        bucket = (bucket + 1) % ipfsProviders.length
-        return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      })
-      .catch(e => {
-        bucket = (bucket + 1) % ipfsProviders.length
-        console.log("Errored with", ipfsProviders[bucket], "trying next")
-        return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      })
-      .catch(e => {
-        bucket = (bucket + 1) % ipfsProviders.length
-        console.log("Errored with", ipfsProviders[bucket], "trying next")
-        return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      })
-      .catch(e => {
-        bucket = (bucket + 1) % ipfsProviders.length
-        console.log("Errored with", ipfsProviders[bucket], "trying next")
-        return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      })
-      .catch(e => {
-        bucket = (bucket + 1) % ipfsProviders.length
-        console.log("Errored with", ipfsProviders[bucket], "trying next")
-        return axios.get(tokenURI.replace("ipfs://", `https://${ipfsProviders[bucket]}/ipfs/`))
-      })
+      fs.writeFileSync(filePath, JSON.stringify(data));
 
-    dataReturned = data
+      dataReturned = data
+    }
 
-  } else {
-    console.log("unknown metadata <NOT IPFS>", tokenURI)
+  } else if (tokenURI.startsWith("https://")) {
+    // console.log("unknown metadata <NOT IPFS>", tokenURI)
+
+    let fileName = tokenURI.replace("https://", "").replaceAll("/", "-"); // replace with the preferred file extension
+    let filePath = path.join(cacheDir, fileName);
+
+    let bucket = parseInt(token_id) % ipfsProviders.length;
+    if (fs.existsSync(filePath)) {
+      // If file exists, load it and log message
+      dataReturned = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      console.log('Data loaded from cache:', filePath);
+    } else {
+      const { data } = await axios.get(tokenURI)
+
+      fs.writeFileSync(filePath, JSON.stringify(data));
+
+      dataReturned = data
+    }
   }
 
 
@@ -183,7 +231,7 @@ const getUnfetchedNfts = () => {
   FROM "public"."token" t
   LEFT JOIN "public"."metadata" m ON t."id" = m."token_id"
   WHERE m."token_id" IS NULL
-  LIMIT 10;
+  LIMIT 30;
   `
 
   return db.any(sql)
