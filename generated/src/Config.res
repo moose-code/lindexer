@@ -112,7 +112,7 @@ let config: chainConfigs = [
         initialBlockInterval: EnvUtils.getIntEnvVar(
           ~envSafe,
           "UNSTABLE__SYNC_CONFIG_INITIAL_BLOCK_INTERVAL",
-          ~fallback=10000,
+          ~fallback=500,
         ),
         // After an RPC error, how much to scale back the number of blocks requested at once
         backoffMultiplicative: EnvUtils.getFloatEnvVar(
@@ -124,13 +124,13 @@ let config: chainConfigs = [
         accelerationAdditive: EnvUtils.getIntEnvVar(
           ~envSafe,
           "UNSTABLE__SYNC_CONFIG_ACCELERATION_ADDITIVE",
-          ~fallback=2000,
+          ~fallback=5,
         ),
         // Do not further increase the block interval past this limit
         intervalCeiling: EnvUtils.getIntEnvVar(
           ~envSafe,
           "UNSTABLE__SYNC_CONFIG_INTERVAL_CEILING",
-          ~fallback=10000,
+          ~fallback=5000,
         ),
         // After an error, how long to wait before retrying
         backoffMillis: 5000,
@@ -143,6 +143,8 @@ let config: chainConfigs = [
           abi: Abis.eRC721Abi->Ethers.makeAbi,
           addresses: [
             "0x56B8b60e9aa4c94286bF7139C8f5CD09903D835d"->Ethers.getAddressFromStringUnsafe,
+            "0xB62C414ABf83c0107DB84f8dE1c88631C05A8D7B"->Ethers.getAddressFromStringUnsafe,
+            "0xA9d89db621Ce93102c1E8A7Ae6261023B1258361"->Ethers.getAddressFromStringUnsafe,
           ],
           events: [ERC721Contract_TransferEvent],
         },

@@ -6,13 +6,13 @@ networks:
   - id: 59144
     rpc_config:
       url: https://linea-mainnet.infura.io/v3/3399a6fc18da4932be3d6a64ede25dd3
-      # unstable__sync_config:
-      #   initial_block_interval: 500
-      #   backoff_multiplicative: 0.8
-      #   acceleration_additive: 5
-      #   interval_ceiling: 5000
-      #   backoff_millis: 5000
-      #   query_timeout_millis: 20000
+      unstable__sync_config:
+        initial_block_interval: 500
+        backoff_multiplicative: 0.8
+        acceleration_additive: 5
+        interval_ceiling: 5000
+        backoff_millis: 5000
+        query_timeout_millis: 20000
     start_block: 0
     contracts:
       - name: ERC721
