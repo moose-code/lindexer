@@ -17,21 +17,21 @@ type Token @entity {
   tokenId: BigInt!
   collection: Nftcollection!
   owner: User!
-  metadata: Metadata @derivedFrom(field: "tokenId")
+  metadata: Metadata @derivedFrom(field: "token_id")
 }
 
 type Metadata @entity {
   id: ID!
-  tokenId: BigInt!
+  token_id: String!
   name: String!
   description: String!
   image: String!
-  attributes: [Attribute!]! @derivedFrom(field: "tokenId")
+  attributes: [Attribute!]! @derivedFrom(field: "metadata_id")
 }
 
 type Attribute @entity {
   id: ID!
-  tokenId: BigInt!
+  metadata_id: String!
   trait_type: String!
   value: String!
 }

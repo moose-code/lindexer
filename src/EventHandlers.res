@@ -12,7 +12,7 @@ Handlers.ERC721Contract.Transfer.loader((~event, ~context) => {
 
 Handlers.ERC721Contract.Transfer.handler((~event, ~context) => {
   let token = {
-    id: event.srcAddress->Ethers.ethAddressToString ++ event.params.tokenId->Ethers.BigInt.toString,
+    id: `${event.srcAddress->Ethers.ethAddressToString}-${event.params.tokenId->Ethers.BigInt.toString}`,
     tokenId: event.params.tokenId,
     collection: event.srcAddress->Ethers.ethAddressToString,
     owner: event.params.to->Ethers.ethAddressToString,

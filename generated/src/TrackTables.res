@@ -162,13 +162,13 @@ let trackAllTables = async () => {
     ~relationshipType="object",
     ~relationalKey="metadata",
     ~mappedEntity="metadata",
-    ~derivedFromFieldKey="tokenId",
+    ~derivedFromFieldKey="token_id",
   )
   let _ = await createEntityRelationship(
     ~tableName="metadata",
     ~relationshipType="array",
     ~relationalKey="attributes",
     ~mappedEntity="attribute",
-    ~derivedFromFieldKey="tokenId",
+    ~derivedFromFieldKey="metadata_id",
   )
 }

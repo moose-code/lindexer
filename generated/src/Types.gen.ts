@@ -45,7 +45,7 @@ export type tokenEntity = {
 // tslint:disable-next-line:interface-over-type-literal
 export type metadataEntity = {
   readonly id: string; 
-  readonly tokenId: Ethers_BigInt_t; 
+  readonly token_id: string; 
   readonly name: string; 
   readonly description: string; 
   readonly image: string
@@ -54,7 +54,7 @@ export type metadataEntity = {
 // tslint:disable-next-line:interface-over-type-literal
 export type attributeEntity = {
   readonly id: string; 
-  readonly tokenId: Ethers_BigInt_t; 
+  readonly metadata_id: string; 
   readonly trait_type: string; 
   readonly value: string
 };

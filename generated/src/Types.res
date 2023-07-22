@@ -79,7 +79,7 @@ type tokenEntity = {
 @spice @genType
 type metadataEntity = {
   id: string,
-  tokenId: Ethers.BigInt.t,
+  token_id: string,
   name: string,
   description: string,
   image: string,
@@ -88,7 +88,7 @@ type metadataEntity = {
 @spice @genType
 type attributeEntity = {
   id: string,
-  tokenId: Ethers.BigInt.t,
+  metadata_id: string,
   trait_type: string,
   value: string,
 }

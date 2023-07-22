@@ -312,7 +312,7 @@ WHERE id IN ${sql(entityIdArray)};`
 module.exports.readMetadataEntities = (sql, entityIdArray) => sql`
 SELECT 
 "id",
-"tokenId",
+"token_id",
 "name",
 "description",
 "image",
@@ -331,7 +331,7 @@ const batchSetMetadataCore = (sql, entityDataArray) => {
     INSERT INTO public.metadata
 ${sql(combinedEntityAndEventData,
     "id",
-    "tokenId",
+    "token_id",
     "name",
     "description",
     "image",
@@ -342,7 +342,7 @@ ${sql(combinedEntityAndEventData,
   ON CONFLICT(id) DO UPDATE
   SET
   "id" = EXCLUDED."id",
-  "tokenId" = EXCLUDED."tokenId",
+  "token_id" = EXCLUDED."token_id",
   "name" = EXCLUDED."name",
   "description" = EXCLUDED."description",
   "image" = EXCLUDED."image",
@@ -371,7 +371,7 @@ WHERE id IN ${sql(entityIdArray)};`
 module.exports.readAttributeEntities = (sql, entityIdArray) => sql`
 SELECT 
 "id",
-"tokenId",
+"metadata_id",
 "trait_type",
 "value",
 event_chain_id, 
@@ -388,7 +388,7 @@ const batchSetAttributeCore = (sql, entityDataArray) => {
     INSERT INTO public.attribute
 ${sql(combinedEntityAndEventData,
     "id",
-    "tokenId",
+    "metadata_id",
     "trait_type",
     "value",
     "event_chain_id",
@@ -397,7 +397,7 @@ ${sql(combinedEntityAndEventData,
   ON CONFLICT(id) DO UPDATE
   SET
   "id" = EXCLUDED."id",
-  "tokenId" = EXCLUDED."tokenId",
+  "metadata_id" = EXCLUDED."metadata_id",
   "trait_type" = EXCLUDED."trait_type",
   "value" = EXCLUDED."value",
   "event_chain_id" = EXCLUDED."event_chain_id",

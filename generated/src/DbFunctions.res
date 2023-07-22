@@ -204,7 +204,7 @@ module Metadata = {
   open Types
   type metadataReadRow = {
     id: string,
-    tokenId: string,
+    token_id: string,
     name: string,
     description: string,
     image: string,
@@ -216,12 +216,12 @@ module Metadata = {
   let readRowToReadEntityData = (readRow: metadataReadRow): readEntityData<
     Types.metadataEntity,
   > => {
-    let {id, tokenId, name, description, image, chainId, eventId} = readRow
+    let {id, token_id, name, description, image, chainId, eventId} = readRow
 
     {
       entity: {
         id,
-        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe, // We know it will always be defined
+        token_id,
         name,
         description,
         image,
@@ -252,7 +252,7 @@ module Attribute = {
   open Types
   type attributeReadRow = {
     id: string,
-    tokenId: string,
+    metadata_id: string,
     trait_type: string,
     value: string,
     @as("event_chain_id") chainId: int,
@@ -262,12 +262,12 @@ module Attribute = {
   let readRowToReadEntityData = (readRow: attributeReadRow): readEntityData<
     Types.attributeEntity,
   > => {
-    let {id, tokenId, trait_type, value, chainId, eventId} = readRow
+    let {id, metadata_id, trait_type, value, chainId, eventId} = readRow
 
     {
       entity: {
         id,
-        tokenId: tokenId->Ethers.BigInt.fromStringUnsafe, // We know it will always be defined
+        metadata_id,
         trait_type,
         value,
       },

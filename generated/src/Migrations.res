@@ -125,7 +125,7 @@ module Token = {
 module Metadata = {
   let createMetadataTable: unit => promise<unit> = async () => {
     await %raw(
-      "sql`CREATE TABLE \"public\".\"metadata\" (\"id\" text NOT NULL,\"tokenId\" numeric NOT NULL,\"name\" text NOT NULL,\"description\" text NOT NULL,\"image\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+      "sql`CREATE TABLE \"public\".\"metadata\" (\"id\" text NOT NULL,\"token_id\" text NOT NULL,\"name\" text NOT NULL,\"description\" text NOT NULL,\"image\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
     )
   }
 
@@ -138,7 +138,7 @@ module Metadata = {
 module Attribute = {
   let createAttributeTable: unit => promise<unit> = async () => {
     await %raw(
-      "sql`CREATE TABLE \"public\".\"attribute\" (\"id\" text NOT NULL,\"tokenId\" numeric NOT NULL,\"trait_type\" text NOT NULL,\"value\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+      "sql`CREATE TABLE \"public\".\"attribute\" (\"id\" text NOT NULL,\"metadata_id\" text NOT NULL,\"trait_type\" text NOT NULL,\"value\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
     )
   }
 

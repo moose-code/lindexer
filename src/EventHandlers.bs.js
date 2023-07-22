@@ -16,7 +16,7 @@ Curry._1(Handlers.ERC721Contract.Transfer.loader, (function ($$event, context) {
       }));
 
 Curry._1(Handlers.ERC721Contract.Transfer.handler, (function ($$event, context) {
-        var token_id = Ethers.ethAddressToString($$event.srcAddress) + $$event.params.tokenId.toString();
+        var token_id = "" + Ethers.ethAddressToString($$event.srcAddress) + "-" + $$event.params.tokenId.toString() + "";
         var token_tokenId = $$event.params.tokenId;
         var token_collection = Ethers.ethAddressToString($$event.srcAddress);
         var token_owner = Ethers.ethAddressToString($$event.params.to);
