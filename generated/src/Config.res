@@ -142,7 +142,7 @@ let config: chainConfigs = [
           name: "ERC721",
           abi: Abis.eRC721Abi->Ethers.makeAbi,
           addresses: [
-            "0xed13d8f1cf662c9641d45504c9ef1148ce5d61ca"->Ethers.getAddressFromStringUnsafe,
+            "0x56B8b60e9aa4c94286bF7139C8f5CD09903D835d"->Ethers.getAddressFromStringUnsafe,
           ],
           events: [ERC721Contract_TransferEvent],
         },

@@ -56,14 +56,11 @@ type nftcollectionEntity = {
   name?: string,
   symbol?: string,
   maxSupply?: Ethers.BigInt.t,
-  currentSupply?: int,
+  currentSupply: int,
 }
 
 @spice @genType
-type userEntity = {
-  id: string,
-  address: string,
-}
+type userEntity = {id: string}
 
 @spice @genType
 type tokenEntity = {
@@ -121,8 +118,6 @@ module ERC721Contract = {
       delete: id => unit,
     }
     type userEntityHandlerContext = {
-      userFrom: unit => option<userEntity>,
-      userTo: unit => option<userEntity>,
       set: userEntity => unit,
       delete: id => unit,
     }
@@ -142,11 +137,6 @@ module ERC721Contract = {
     }
 
     @genType
-    type userEntityLoaderContext = {
-      userFromLoad: id => unit,
-      userToLoad: id => unit,
-    }
-    @genType
     type nftcollectionEntityLoaderContext = {nftCollectionUpdatedLoad: id => unit}
     @genType
     type tokenEntityLoaderContext = {
@@ -161,7 +151,6 @@ module ERC721Contract = {
     @genType
     type loaderContext = {
       contractRegistration: contractRegistrations,
-      user: userEntityLoaderContext,
       nftcollection: nftcollectionEntityLoaderContext,
       token: tokenEntityLoaderContext,
     }

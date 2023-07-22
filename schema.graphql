@@ -1,15 +1,14 @@
 type Nftcollection @entity {
   id: ID!
-  contractAddress: Bytes!
+  contractAddress: String!
   name: String
   symbol: String
   maxSupply: BigInt
-  currentSupply: Int
+  currentSupply: Int!
 }
 
 type User @entity {
   id: ID!
-  address: Bytes!
   tokens: [Token!]! @derivedFrom(field: "owner")
 }
 

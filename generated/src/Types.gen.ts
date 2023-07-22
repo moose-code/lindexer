@@ -28,11 +28,11 @@ export type nftcollectionEntity = {
   readonly name?: string; 
   readonly symbol?: string; 
   readonly maxSupply?: Ethers_BigInt_t; 
-  readonly currentSupply?: number
+  readonly currentSupply: number
 };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type userEntity = { readonly id: string; readonly address: string };
+export type userEntity = { readonly id: string };
 
 // tslint:disable-next-line:interface-over-type-literal
 export type tokenEntity = {
@@ -69,12 +69,7 @@ export type ERC721Contract_TransferEvent_nftcollectionEntityHandlerContext = {
 };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type ERC721Contract_TransferEvent_userEntityHandlerContext = {
-  readonly userFrom: () => (undefined | userEntity); 
-  readonly userTo: () => (undefined | userEntity); 
-  readonly set: (_1:userEntity) => void; 
-  readonly delete: (_1:id) => void
-};
+export type ERC721Contract_TransferEvent_userEntityHandlerContext = { readonly set: (_1:userEntity) => void; readonly delete: (_1:id) => void };
 
 // tslint:disable-next-line:interface-over-type-literal
 export type ERC721Contract_TransferEvent_tokenEntityHandlerContext = {
@@ -94,9 +89,6 @@ export type ERC721Contract_TransferEvent_context = {
 };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type ERC721Contract_TransferEvent_userEntityLoaderContext = { readonly userFromLoad: (_1:id) => void; readonly userToLoad: (_1:id) => void };
-
-// tslint:disable-next-line:interface-over-type-literal
 export type ERC721Contract_TransferEvent_nftcollectionEntityLoaderContext = { readonly nftCollectionUpdatedLoad: (_1:id) => void };
 
 // tslint:disable-next-line:interface-over-type-literal
@@ -108,7 +100,6 @@ export type ERC721Contract_TransferEvent_contractRegistrations = { readonly addE
 // tslint:disable-next-line:interface-over-type-literal
 export type ERC721Contract_TransferEvent_loaderContext = {
   readonly contractRegistration: ERC721Contract_TransferEvent_contractRegistrations; 
-  readonly user: ERC721Contract_TransferEvent_userEntityLoaderContext; 
   readonly nftcollection: ERC721Contract_TransferEvent_nftcollectionEntityLoaderContext; 
   readonly token: ERC721Contract_TransferEvent_tokenEntityLoaderContext
 };

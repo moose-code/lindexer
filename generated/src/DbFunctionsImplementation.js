@@ -164,7 +164,6 @@ const batchSetNftcollectionCore = (sql, entityDataArray) => {
     name: entityData.entity.name !== undefined ? entityData.entity.name : null,
     symbol: entityData.entity.symbol !== undefined ? entityData.entity.symbol : null,
     maxSupply: entityData.entity.maxSupply !== undefined ? entityData.entity.maxSupply : null,
-    currentSupply: entityData.entity.currentSupply !== undefined ? entityData.entity.currentSupply : null,
   }));
   return sql`
     INSERT INTO public.nftcollection
@@ -210,7 +209,6 @@ WHERE id IN ${sql(entityIdArray)};`
 module.exports.readUserEntities = (sql, entityIdArray) => sql`
 SELECT 
 "id",
-"address",
 
 event_chain_id, 
 event_id
@@ -226,7 +224,6 @@ const batchSetUserCore = (sql, entityDataArray) => {
     INSERT INTO public.user
 ${sql(combinedEntityAndEventData,
     "id",
-    "address",
     
     "event_chain_id",
     "event_id",
@@ -234,7 +231,6 @@ ${sql(combinedEntityAndEventData,
   ON CONFLICT(id) DO UPDATE
   SET
   "id" = EXCLUDED."id",
-  "address" = EXCLUDED."address",
   
   "event_chain_id" = EXCLUDED."event_chain_id",
   "event_id" = EXCLUDED."event_id";`;

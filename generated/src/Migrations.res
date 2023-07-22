@@ -86,7 +86,7 @@ module DynamicContractRegistryTable = {
 module Nftcollection = {
   let createNftcollectionTable: unit => promise<unit> = async () => {
     await %raw(
-      "sql`CREATE TABLE \"public\".\"nftcollection\" (\"id\" text NOT NULL,\"contractAddress\" text NOT NULL,\"name\" text,\"symbol\" text,\"maxSupply\" numeric,\"currentSupply\" integer, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+      "sql`CREATE TABLE \"public\".\"nftcollection\" (\"id\" text NOT NULL,\"contractAddress\" text NOT NULL,\"name\" text,\"symbol\" text,\"maxSupply\" numeric,\"currentSupply\" integer NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
     )
   }
 
@@ -99,7 +99,7 @@ module Nftcollection = {
 module User = {
   let createUserTable: unit => promise<unit> = async () => {
     await %raw(
-      "sql`CREATE TABLE \"public\".\"user\" (\"id\" text NOT NULL,\"address\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
+      "sql`CREATE TABLE \"public\".\"user\" (\"id\" text NOT NULL, event_chain_id INTEGER NOT NULL, event_id NUMERIC NOT NULL, db_write_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE (\"id\"));`"
     )
   }
 
