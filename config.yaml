@@ -2,24 +2,27 @@ name: erc20indexer
 version: 1.0.0
 description: ERC-20 indexer
 networks:
-  - id: 1337
+  #59140 for testnet
+  - id: 59144
     rpc_config:
-      url: http://localhost:8545
+      url: https://linea-mainnet.infura.io/v3/3399a6fc18da4932be3d6a64ede25dd3
     start_block: 0
     contracts:
-      - name: ERC20
-        abi_file_path: abis/ERC20.json
-        address: ["0x2B2f78c5BF6D9C12Ee1225D5F374aa91204580c3"]
+      - name: ERC721
+        address:
+          #Linea Bored Ape for mainnet?
+          - "0xed13d8f1cf662c9641d45504c9ef1148ce5d61ca"
         handler: ./src/EventHandlers.bs.js
         events:
-          - event: "Approval"
+          - event: "Transfer(address from, address to, uint256 tokenId)"
             requiredEntities:
-              - name: "Account"
+              - name: "User"
                 labels:
-                  - "ownerAccountChanges"
-          - event: "Transfer"
-            requiredEntities:
-              - name: "Account"
+                  - "userFrom"
+                  - "userTo"
+              - name: Nftcollection
                 labels:
-                  - "senderAccountChanges"
-                  - "receiverAccountChanges"
+                  - "nftCollectionUpdated"
+              - name: Token
+                labels:
+                  - "existingTransferredToken"

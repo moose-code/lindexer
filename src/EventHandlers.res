@@ -1,103 +1,142 @@
 open Types
 
-Handlers.ERC20Contract.registerApprovalLoadEntities((~event, ~context) => {
-  // loading the required accountEntity
-  context.account.ownerAccountChangesLoad(event.params.owner->Ethers.ethAddressToString)
+let zeroAddress = Ethers.getAddressFromStringUnsafe("0x0000000000000000000000000000000000000000")
+
+Handlers.ERC721Contract.Transfer.loader((~event, ~context) => {
+  context.user.userFromLoad(event.params.from->Ethers.ethAddressToString)
+  context.user.userToLoad(event.params.to->Ethers.ethAddressToString)
+  context.nftcollection.nftCollectionUpdatedLoad(event.srcAddress->Ethers.ethAddressToString)
+  context.token.existingTransferredTokenLoad(
+    event.srcAddress->Ethers.ethAddressToString ++ event.params.tokenId->Ethers.BigInt.toString,
+    ~loaders={},
+  )
 })
 
-Handlers.ERC20Contract.registerApprovalHandler((~event, ~context) => {
-  //  getting the owner accountEntity
-  let ownerAccount = context.account.ownerAccountChanges()
-
-  switch ownerAccount {
-  | Some(existingAccount) => {
-      // setting accountEntity object
-      let accountObject: accountEntity = {
-        id: existingAccount.id,
-        approval: event.params.value,
-        balance: existingAccount.balance,
-      }
-
-      // setting the accountEntity with the new transfer field value
-      context.account.set(accountObject)
-    }
-
-  | None => {
-      // setting accountEntity object
-      let accountObject: accountEntity = {
-        id: event.params.owner->Ethers.ethAddressToString,
-        approval: event.params.value,
-        balance: Ethers.BigInt.fromInt(0),
-      }
-
-      // setting the accountEntity with the new transfer field value
-      context.account.set(accountObject)
-    }
-  }
-})
-
-Handlers.ERC20Contract.registerTransferLoadEntities((~event, ~context) => {
-  // loading the required accountEntity
-  context.account.senderAccountChangesLoad(event.params.from->Ethers.ethAddressToString)
-  context.account.receiverAccountChangesLoad(event.params.to->Ethers.ethAddressToString)
-})
-
-Handlers.ERC20Contract.registerTransferHandler((~event, ~context) => {
-  // getting the sender accountEntity
-  let senderAccount = context.account.senderAccountChanges()
-
-  switch senderAccount {
-  | Some(existingSenderAccount) => {
-      // setting accountEntity object
-      let accountObject: accountEntity = {
-        id: existingSenderAccount.id,
-        approval: existingSenderAccount.approval,
-        balance: existingSenderAccount.balance->Ethers.BigInt.sub(event.params.value),
-      }
-
-      // setting the accountEntity with the new transfer field value
-      context.account.set(accountObject)
-    }
-
-  | None => {
-      // setting accountEntity object
-        let accountObject: accountEntity = {
-          id: event.params.from->Ethers.ethAddressToString,
-          approval: Ethers.BigInt.fromInt(0),
-          balance: Ethers.BigInt.fromInt(0) ->Ethers.BigInt.sub(event.params.value),
-        }
-
-        // setting the accountEntity with the new transfer field value
-        context.account.set(accountObject)
-    }
+Handlers.ERC721Contract.Transfer.handler((~event, ~context) => {
+  let token = {
+    id: event.srcAddress->Ethers.ethAddressToString ++ event.params.tokenId->Ethers.BigInt.toString,
+    tokenId: event.params.tokenId,
+    collection: event.srcAddress->Ethers.ethAddressToString,
+    owner: event.params.to->Ethers.ethAddressToString,
   }
 
-  // getting the sender accountEntity
-  let receiverAccount = context.account.receiverAccountChanges()
+  switch context.nftcollection.nftCollectionUpdated() {
+  | Some(nftCollectionUpdated) =>
+    //Update NFT collections
+    let optExistingToken = context.token.existingTransferredToken()
 
-  switch receiverAccount {
-  | Some(existingReceiverAccount) => {
-      // setting accountEntity object
-      let accountObject: accountEntity = {
-        id: existingReceiverAccount.id,
-        approval: existingReceiverAccount.approval,
-        balance: existingReceiverAccount.balance->Ethers.BigInt.add(event.params.value),
-      }
-
-      // setting the accountEntity with the new transfer field value
-      context.account.set(accountObject)
+    if optExistingToken->Belt.Option.isNone {
+      //Update token collection supply
+      ()
     }
+  | None => //TODO: Create NFT collection
+    ()
+  }->ignore
 
-  | None => {
-      // setting accountEntity object
-          let accountObject: accountEntity = {
-            id: event.params.to->Ethers.ethAddressToString,
-            approval: Ethers.BigInt.fromInt(0),
-            balance: event.params.value,
-          }
-
-          // setting the accountEntity with the new transfer field value
-          context.account.set(accountObject)
+  if event.params.from !== zeroAddress {
+    let optLoadedUserFrom = context.user.userFrom()
+    let userFrom = {
+      id: event.params.from->Ethers.ethAddressToString,
+      address: event.params.from->Ethers.ethAddressToString,
     }
+    context.user.set(userFrom)
   }
+  //
+  // if (event.params.to !== zeroAddress) {
+  //   let loadedUserTo = context.user.userTo();
+  //
+  //   let userToTokensOpt: Array<string> = loadedUserTo?.tokens ?? [];
+  //   let userToTokens: Array<string> = [token.id];
+  //
+  //   if (typeof userToTokensOpt !== "string") {
+  //     userToTokens.concat(userToTokensOpt);
+  //   }
+  //
+  //   let userTo = {
+  //     id: event.params.to,
+  //     address: event.params.to,
+  //     tokens: userToTokens,
+  //   };
+  //   context.user.set(userTo);
+  // }
+  //
+  // context.token.set(token);
 })
+
+/*
+SimpleNftContract_Transfer_loader(({ event, context }) => {
+  context.user.userFromLoad(event.params.from, { loaders: undefined });
+  context.user.userToLoad(event.params.to, { loaders: undefined });
+  context.nftcollection.nftCollectionUpdatedLoad(event.srcAddress);
+  context.token.existingTransferredTokenLoad(
+    event.srcAddress.concat("-").concat(event.params.tokenId.toString()), { loaders: undefined }
+  );
+});
+
+SimpleNftContract_Transfer_handler(({ event, context }) => {
+  let nftCollectionUpdated = context.nftcollection.nftCollectionUpdated();
+  let token = {
+    id: event.srcAddress.concat("-").concat(event.params.tokenId.toString()),
+    tokenId: event.params.tokenId,
+    collection: event.srcAddress,
+    owner: event.params.to,
+  };
+  if (nftCollectionUpdated) {
+    let existingToken = context.token.existingTransferredToken();
+    if (!existingToken) {
+      let currentSupply = Number(nftCollectionUpdated.currentSupply) + 1;
+
+      let nftCollection: nftcollectionEntity = {
+        ...nftCollectionUpdated,
+        currentSupply,
+      };
+      context.nftcollection.set(nftCollection);
+    }
+  } else {
+    console.log(
+      "Issue with events emitted, unregistered NFT collection transfer"
+    );
+    return;
+  }
+
+  if (event.params.from !== zeroAddress) {
+    let loadedUserFrom = context.user.userFrom();
+    let userFromTokensOpt: Array<string> = loadedUserFrom?.tokens ?? [];
+    let userFromTokens: Array<string> = [];
+    if (typeof userFromTokensOpt !== "string") {
+      userFromTokens.concat(userFromTokensOpt);
+    }
+    let index = userFromTokens.indexOf(token.id, 0);
+    if (index > -1) {
+      userFromTokens.splice(index, 1);
+    }
+
+    let userFrom = {
+      id: event.params.from,
+      address: event.params.from,
+      tokens: userFromTokens,
+    };
+    context.user.set(userFrom);
+  }
+
+  if (event.params.to !== zeroAddress) {
+    let loadedUserTo = context.user.userTo();
+
+    let userToTokensOpt: Array<string> = loadedUserTo?.tokens ?? [];
+    let userToTokens: Array<string> = [token.id];
+
+    if (typeof userToTokensOpt !== "string") {
+      userToTokens.concat(userToTokensOpt);
+    }
+
+    let userTo = {
+      id: event.params.to,
+      address: event.params.to,
+      tokens: userToTokens,
+    };
+    context.user.set(userTo);
+  }
+
+  context.token.set(token);
+});
+*/

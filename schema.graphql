@@ -1,5 +1,21 @@
-type Account @entity {
+type Nftcollection @entity {
   id: ID!
-  approval: BigInt!
-  balance: BigInt!
+  contractAddress: Bytes!
+  name: String
+  symbol: String
+  maxSupply: BigInt
+  currentSupply: Int
+}
+
+type User @entity {
+  id: ID!
+  address: Bytes!
+  tokens: [Token!]! @derivedFrom(field: "owner")
+}
+
+type Token @entity {
+  id: ID!
+  tokenId: BigInt!
+  collection: Nftcollection!
+  owner: User!
 }
