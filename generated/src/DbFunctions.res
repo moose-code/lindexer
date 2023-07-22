@@ -85,7 +85,7 @@ module Nftcollection = {
     name: option<string>,
     symbol: option<string>,
     maxSupply: option<string>,
-    currentSupply: option<int>,
+    currentSupply: int,
     @as("event_chain_id") chainId: int,
     @as("event_id") eventId: Ethers.BigInt.t,
   }
@@ -95,14 +95,15 @@ module Nftcollection = {
   > => {
     let {id, contractAddress, name, symbol, maxSupply, currentSupply, chainId, eventId} = readRow
 
+    let maxSupply = maxSupply->Belt.Option.flatMap(bn => bn->Ethers.BigInt.fromString)
     {
       entity: {
         id,
         contractAddress,
         ?name,
         ?symbol,
-        maxSupply: None,
-        ?currentSupply,
+        ?maxSupply,
+        currentSupply,
       },
       eventData: {
         chainId,
@@ -130,19 +131,17 @@ module User = {
   open Types
   type userReadRow = {
     id: string,
-    address: string,
     tokens: array<id>,
     @as("event_chain_id") chainId: int,
     @as("event_id") eventId: Ethers.BigInt.t,
   }
 
   let readRowToReadEntityData = (readRow: userReadRow): readEntityData<Types.userEntity> => {
-    let {id, address, chainId, eventId} = readRow
+    let {id, chainId, eventId} = readRow
 
     {
       entity: {
-        id,
-        address,
+        id: id,
       },
       eventData: {
         chainId,

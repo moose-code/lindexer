@@ -18,7 +18,7 @@ import type {eventLog as Types_eventLog} from './Types.gen';
 
 export const ERC721Contract_Transfer_loader: (userLoader:((_1:{ readonly event: Types_eventLog<Types_ERC721Contract_TransferEvent_eventArgs>; readonly context: Types_ERC721Contract_TransferEvent_loaderContext }) => void)) => void = function (Arg1: any) {
   const result = HandlersBS.ERC721Contract.Transfer.loader(function (Argevent: any, Argcontext: any) {
-      const result1 = Arg1({event:Argevent, context:{contractRegistration:Argcontext.contractRegistration, user:Argcontext.user, nftcollection:Argcontext.nftcollection, token:{existingTransferredTokenLoad:function (Arg11: any, Arg2: any) {
+      const result1 = Arg1({event:Argevent, context:{contractRegistration:Argcontext.contractRegistration, nftcollection:Argcontext.nftcollection, token:{existingTransferredTokenLoad:function (Arg11: any, Arg2: any) {
           const result2 = Curry._2(Argcontext.token.existingTransferredTokenLoad, Arg11, Arg2.loaders);
           return result2
         }}}});

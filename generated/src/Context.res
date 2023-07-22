@@ -15,8 +15,6 @@ module ERC721Contract = {
     ) => contextCreatorFunctions = (~chainId, ~event, ~logger) => {
       let logger =
         logger->Logging.createChildFrom(~logger=_, ~params={"userLog": "ERC721.Transfer.context"})
-      let optIdOf_userFrom = ref(None)
-      let optIdOf_userTo = ref(None)
       let optIdOf_nftCollectionUpdated = ref(None)
       let optIdOf_existingTransferredToken = ref(None)
 
@@ -51,18 +49,6 @@ module ERC721Contract = {
               ~contractAddress,
               ~contractName="ERC721",
             )
-          },
-        },
-        user: {
-          userFromLoad: (id: Types.id) => {
-            optIdOf_userFrom := Some(id)
-
-            let _ = Js.Array2.push(entitiesToLoad, Types.UserRead(id))
-          },
-          userToLoad: (id: Types.id) => {
-            optIdOf_userTo := Some(id)
-
-            let _ = Js.Array2.push(entitiesToLoad, Types.UserRead(id))
           },
         },
         nftcollection: {
@@ -110,14 +96,6 @@ module ERC721Contract = {
             set: entity => {IO.InMemoryStore.User.setUser(~entity, ~dbOp=Types.Set, ~eventData)},
             delete: id =>
               Logging.warn(`[unimplemented delete] can't delete entity(user) with ID ${id}.`),
-            userFrom: () =>
-              optIdOf_userFrom.contents->Belt.Option.flatMap(id =>
-                IO.InMemoryStore.User.getUser(~id)
-              ),
-            userTo: () =>
-              optIdOf_userTo.contents->Belt.Option.flatMap(id =>
-                IO.InMemoryStore.User.getUser(~id)
-              ),
           },
           token: {
             set: entity => {IO.InMemoryStore.Token.setToken(~entity, ~dbOp=Types.Set, ~eventData)},
