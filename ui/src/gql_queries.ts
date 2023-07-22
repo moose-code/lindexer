@@ -15,8 +15,8 @@ export const GET_NFT_COLLECTIONS = gql(`
 `);
 
 export const GET_NFTS_AT_COLLECTION_ID = gql(`
-  query GetNftsWithCollectionId($collectionId: String!) {
-    token(where: {collection: {_eq: $collectionId}}) {
+  query GetNftsWithCollectionId($collectionId: String!, $limit: Int!, $skip: Int!) {
+    token(where: {collection: {_eq: $collectionId}}, limit: $limit, offset: $skip, order_by: {tokenId: asc}) {
         id
         collection
         owner

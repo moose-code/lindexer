@@ -5,16 +5,97 @@ import { useQuery } from "@apollo/client";
 import { GET_NFTS_AT_COLLECTION_ID } from "../gql_queries.js";
 import NftThumbnail from "../components/NFTThumbnail";
 
+const PAGE_SIZE = 15; // best as multiples of 5
+
+type PageSelectorProps = {
+  pageNumber: number;
+  goToPage: (n: number) => void;
+  previousPage: () => void;
+  nextPage: () => void;
+  collectionCount: number;
+};
+const PageSelector = ({
+  pageNumber,
+  goToPage,
+  previousPage,
+  nextPage,
+  collectionCount,
+}: PageSelectorProps) => {
+  return (
+    <div className="flex flex-row m-2 justify-center text-white">
+      {pageNumber > 1 && (
+        <>
+          <button
+            className="m-2"
+            onClick={(_) => {
+              goToPage(1);
+            }}
+          >
+            First
+          </button>
+          <button
+            className="m-2"
+            onClick={(_) => {
+              previousPage();
+            }}
+          >
+            Previous
+          </button>
+        </>
+      )}
+      <span>{pageNumber > 3 && "..."}</span>
+      {Array.from({ length: 5 }, (_, index) => (
+        <>
+          {pageNumber + index + 1 - 3 > 0 &&
+            pageNumber + index + 1 - 3 < collectionCount / PAGE_SIZE && ( // prevents the page number from going below 0 and above the total number of pages
+              <button
+                className={`m-2 ${pageNumber + index + 1 - 3 == pageNumber ? "underline" : ""
+                  }`}
+                onClick={(_) => {
+                  goToPage(Math.round(pageNumber + index + 1 - 3));
+                }}
+                key={index}
+              >
+                {Math.round(pageNumber + index + 1 - 3)}
+                {/*  // therefor shows 2 above and 2 below the current active page */}
+              </button>
+            )}
+        </>
+      ))}
+      <span>{pageNumber < collectionCount / PAGE_SIZE - 4 && "..."}</span>
+      {pageNumber < collectionCount / PAGE_SIZE && (
+        <>
+          <button
+            className="m-2"
+            onClick={(_) => {
+              nextPage();
+            }}
+          >
+            Next
+          </button>
+          <button
+            className="m-2"
+            onClick={(_) => {
+              goToPage(collectionCount / PAGE_SIZE - 1);
+            }}
+          >
+            Last
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
 const CollectionPage = () => {
   let { collection } = useParams();
 
-  let { data, loading, error } = useQuery(GET_NFTS_AT_COLLECTION_ID, {
-    variables: { collectionId: collection ?? "" },
-  });
-
-  const pageSize = 15; // best as multiples of 5
-
   const [pageNumber, setPageNumber] = React.useState(1);
+
+  const skip = (pageNumber - 1) * PAGE_SIZE;
+
+  let { data, loading, error } = useQuery(GET_NFTS_AT_COLLECTION_ID, {
+    variables: { collectionId: collection ?? "", limit: PAGE_SIZE, skip },
+  });
 
   const previousPage = () => {
     //TODO change paginated query
@@ -34,7 +115,7 @@ const CollectionPage = () => {
 
   return (
     <>
-      <div className="flex md:flex-row flex-col">
+      <div className="w-full flex md:flex-row flex-col justify-center items-center">
         {/* <div className="flex flex-col w-full md:w-1/3 mt-2"> */}
         {/*   {collectionFetchState.loading ? ( */}
         {/*     <Loader /> */}
@@ -56,86 +137,35 @@ const CollectionPage = () => {
           ) : error ? (
             <p>{error.message}</p>
           ) : data && data?.token.length !== 0 ? (
-            <div className="flex flex-col relative">
+            <div className="w-full border flex flex-col relative">
               <div
                 className={`grid grid-cols-3 md:grid-cols-5 gap-0 m-0 md:gap-2 md:mx-4`}
               >
                 {data.token.map((token) => {
+                  let { collection, tokenId } = token;
                   const name = token.metadataMap?.name ?? "";
                   const image = token.metadataMap?.image ?? "";
-                  return <NftThumbnail name={name} image={image} />;
+                  return (
+                    <NftThumbnail
+                      name={name}
+                      image={image}
+                      collection={collection}
+                      tokenId={tokenId}
+                    />
+                  );
                 })}
-              </div>
-              <div className="flex flex-row m-2 justify-center text-white">
-                {pageNumber > 1 ?? (
-                  <>
-                    <button
-                      className="m-2"
-                      onClick={(_) => {
-                        goToPage(1);
-                      }}
-                    >
-                      First
-                    </button>
-                    <button
-                      className="m-2"
-                      onClick={(_) => {
-                        previousPage();
-                      }}
-                    >
-                      Previous
-                    </button>
-                  </>
-                )}
-                <span>{pageNumber > 3 ? "..." : null}</span>
-                {Array.from({ length: 5 }, (_, index) => (
-                  <>
-                    {pageNumber + index + 1 - 3 > 0 &&
-                      pageNumber + index + 1 - 3 < collectionCount / pageSize ? ( // prevents the page number from going below 0 and above the total number of pages
-                      <button
-                        className={`m-2 ${pageNumber + index + 1 - 3 == pageNumber
-                            ? "underline"
-                            : ""
-                          }`}
-                        onClick={(_) => {
-                          goToPage(Math.round(pageNumber + index + 1 - 3));
-                        }}
-                        key={index}
-                      >
-                        {Math.round(pageNumber + index + 1 - 3)}
-                        {/*  // therefor shows 2 above and 2 below the current active page */}
-                      </button>
-                    ) : null}
-                  </>
-                ))}
-                <span>
-                  {pageNumber < collectionCount / pageSize - 4 ? "..." : null}
-                </span>
-                {pageNumber < collectionCount / pageSize ? (
-                  <>
-                    <button
-                      className="m-2"
-                      onClick={(_) => {
-                        nextPage();
-                      }}
-                    >
-                      Next
-                    </button>
-                    <button
-                      className="m-2"
-                      onClick={(_) => {
-                        goToPage(collectionCount / pageSize - 1);
-                      }}
-                    >
-                      Last
-                    </button>
-                  </>
-                ) : null}
               </div>
             </div>
           ) : (
             "No tokens found"
           )}
+          <PageSelector
+            pageNumber={pageNumber}
+            goToPage={goToPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            collectionCount={collectionCount}
+          />
         </div>
       </div>
     </>
