@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import HyperLink from "./Hyperlink";
 
 type TableRowProps = {
@@ -64,7 +64,7 @@ const NftModal = ({ showModal, setShowModal, token }: NftModalProps) => {
                 <div className="flex  w-full">
                   <img
                     src={imageUrl}
-                    className="object-cover rounded-l-xl w-2/3"
+                    className="object-cover rounded-l-xl w-[60%]"
                   />
                   <div className="flex flex-col justify-center p-4 max-w-[40%]">
                     <table>

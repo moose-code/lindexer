@@ -1,7 +1,7 @@
 const Search = () => {
   return (
     <svg
-      class="svg-icon search-icon"
+      className="svg-icon search-icon"
       aria-labelledby="title desc"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ const Search = () => {
     >
       <title id="title">Search Icon</title>
       <desc id="desc">A magnifying glass icon.</desc>
-      <g class="search-path" fill="none" stroke="#848F91">
+      <g className="search-path" fill="none" stroke="#848F91">
         <path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4" />
         <circle cx="8" cy="8" r="7" />
       </g>
