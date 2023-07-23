@@ -2,10 +2,9 @@ name: erc20indexer
 version: 1.0.0
 description: ERC-20 indexer
 networks:
-  #59140 for testnet
-  - id: 59144
+  - id: 59140
     rpc_config:
-      url: https://linea-mainnet.infura.io/v3/3399a6fc18da4932be3d6a64ede25dd3
+      url: https://linea-goerli.infura.io/v3/36857fb4550a4555ba08019b884e2a78
       unstable__sync_config:
         initial_block_interval: 500
         backoff_multiplicative: 0.8
@@ -17,16 +16,10 @@ networks:
     contracts:
       - name: ERC721
         address:
-          #Linea Bored Ape for mainnet?
-          - "0x56B8b60e9aa4c94286bF7139C8f5CD09903D835d"
-          - "0xB62C414ABf83c0107DB84f8dE1c88631C05A8D7B"
-          - "0xA9d89db621Ce93102c1E8A7Ae6261023B1258361"
-          # Bear market club
-          - "0x15267cc8096Db345432a46CEfe6Bf6Be00aDbC90"
-          # Victoreans
-          - "0x2842049cdDF138aDf63f392285607751c15104Fd"
-          # Linea friends
-          - "0x0FeC1140b0F47b4dA07087577bC7655A8645372d"
+          #Linea Ape for mainnet?
+          - "0x7f48CA9A7d686e3043Dab5602567f5a5c44EeE0b"
+          # Parimals
+          - "0xDff3E7c548857399BFF017F7326977eaedBBE948"
         handler: ./src/EventHandlers.bs.js
         events:
           - event: "Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"

@@ -49,8 +49,13 @@ const ipfsProviders = [
 config();
 
 const provider = new ethers.JsonRpcProvider(
+  process.env.RPC_ENDPOINT ||
   `https://linea-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
 );
+console.log("rpc", process.env.RPC_ENDPOINT)
+// const provider = new ethers.JsonRpcProvider(
+//   `https://linea-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
+// );
 
 // Database setup
 const DATABASE_URI =
@@ -231,11 +236,16 @@ const getUnfetchedNfts = () => {
   FROM "public"."token" t
   LEFT JOIN "public"."metadata" m ON t."id" = m."token_id"
   WHERE m."token_id" IS NULL
-  LIMIT 30;
+  LIMIT 10;
   `
 
   return db.any(sql)
     .then(async rawSqlData => {
+      if (rawSqlData.length == 0) {
+        console.log("NFT metadata synced")
+        return false
+      }
+
       const metadata = await Promise.all(rawSqlData.map(dataItem => {
         const { tokenId: token_id, collection } = dataItem
         return fetchNFTMetadata(collection, token_id).then(metadata => {
@@ -246,6 +256,7 @@ const getUnfetchedNfts = () => {
           }
         })
       }))
+
 
       const metadataToSave = metadata.map(({ name, description, image, collection, token_id }) => {
         return {
@@ -285,29 +296,30 @@ const getUnfetchedNfts = () => {
           }
         })
       }).flat()
+      if (attributesToSave.length > 0) {
+        const attributes_columns = [
+          'id',
+          'metadata_id',
+          'trait_type',
+          'value',
+          'event_chain_id',
+          'event_id'
+        ];
 
-      const attributes_columns = [
-        'id',
-        'metadata_id',
-        'trait_type',
-        'value',
-        'event_chain_id',
-        'event_id'
-      ];
+        const attributes_tableName = new pgp.helpers.TableName({ table: 'attribute', schema: 'public' });
 
-      const attributes_tableName = new pgp.helpers.TableName({ table: 'attribute', schema: 'public' });
+        const attributes_query = pgp.helpers.insert(attributesToSave, attributes_columns, attributes_tableName);
 
-      const attributes_query = pgp.helpers.insert(attributesToSave, attributes_columns, attributes_tableName);
-
-      db.none(attributes_query)
-        .then(() => {
-          console.log("Attributes inserted successfully");
-        })
-        .catch(error => {
-          // console.log("data for error", metadata[0].token_id)
-          // console.log("data for error", attributesToSave)
-          console.error("ERROR (writing attribute):", error);
-        });
+        db.none(attributes_query)
+          .then(() => {
+            console.log("Attributes inserted successfully");
+          })
+          .catch(error => {
+            // console.log("data for error", metadata[0].token_id)
+            // console.log("data for error", attributesToSave)
+            console.error("ERROR (writing attribute):", error);
+          });
+      }
 
       await metadata_promise; // So that the metadata has finished writing before moving on.
 
