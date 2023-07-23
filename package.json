@@ -5,12 +5,12 @@
     "build-envio": "envio codegen",
     "docker-envio": "envio local docker up",
     "setup-envio": "envio local db-migrate setup",
-    "start": "envio start",
+    "start": "node generated-testnet/src/Index.bs.js",
     "build-envio-testnet": "envio codegen -o generated-testnet -c config.testnet.yaml ",
     "docker-envio-testnet-broken": "PG_PORT=5433 HASURA_EXTERNAL_PORT=8081 envio local docker up",
     "docker-envio-testnet": "PG_PORT=5433 HASURA_EXTERNAL_PORT=8081 docker compose -p lindexer-testnet -f ./generated/docker-compose.yaml up -d",
     "setup-envio-testnet": "cd generated-testnet; PG_PORT=5433 HASURA_GRAPHQL_ENDPOINT='http://localhost:8081/v1/metadata' pnpm db-setup",
-    "start-testnet": "PG_PORT=5433 node generated-testnet/src/Index.bs.js",
+    "start-testnet": "HEATH_CHECK_PORT=3001 PG_PORT=5433 node generated-testnet/src/Index.bs.js",
     "clean": "rescript clean -with-deps",
     "build": "rescript build -with-deps",
     "watch": "rescript build -w -with-deps"
@@ -25,7 +25,7 @@
     "rescript": "^10.1.2"
   },
   "dependencies": {
-    "envio": "0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1",
+    "envio": "0.0.0-force-npm-publish-eth-paris-20230723055143-297ddfc",
     "generated": "workspace:*"
   }
 }
