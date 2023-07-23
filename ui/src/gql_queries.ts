@@ -1,6 +1,10 @@
 import { gql } from "./__generated__";
 
+// export const HASURA_URL = "http://localhost:8080/v1/graphql";
+// mainnet
 export const HASURA_URL = "http://104.248.33.65:8088/v1/graphql";
+//testnet
+// export const HASURA_URL = "http://104.248.33.65:8089/v1/graphql";
 
 export const GET_NFT_COLLECTIONS = gql(`
   query GetNftCollections {

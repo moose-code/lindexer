@@ -1,7 +1,6 @@
-import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import NFTPage from "./pages/NFTPage";
+// import NFTPage from "./pages/NFTPage";
 import CollectionPage from "./pages/CollectionPage";
 
 function App() {

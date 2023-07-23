@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GET_COLLECTION_WITH_TOKENS } from "../gql_queries.js";
 import NftThumbnail from "../components/NFTThumbnail";
-import NFTCollectionCard from "../components/NFTCollectionCard.js";
+import { NFTCollectionCardDetailed } from "../components/NFTCollectionCard.js";
+import NftModal, { Token } from "../components/NftModal";
 
 const PAGE_SIZE = 15; // best as multiples of 5
 
@@ -15,6 +16,7 @@ type PageSelectorProps = {
   nextPage: () => void;
   collectionCount: number;
 };
+
 const PageSelector = ({
   pageNumber,
   goToPage,
@@ -87,16 +89,24 @@ const PageSelector = ({
     </div>
   );
 };
-const CollectionPage = () => {
-  let { collection } = useParams();
 
+const CollectionPage = () => {
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectedToken, setSelectedToken] = React.useState<Token | null>(null);
   const [pageNumber, setPageNumber] = React.useState(1);
+
+  const { collection } = useParams();
 
   const skip = (pageNumber - 1) * PAGE_SIZE;
 
   let { data, loading, error } = useQuery(GET_COLLECTION_WITH_TOKENS, {
     variables: { collectionId: collection ?? "", limit: PAGE_SIZE, skip },
   });
+
+  const openNftInModal = (token: Token) => {
+    setSelectedToken(token);
+    setShowModal(true);
+  };
 
   const previousPage = () => {
     //TODO change paginated query
@@ -121,42 +131,57 @@ const CollectionPage = () => {
 
   return (
     <>
-      <div className="w-full flex md:flex-row flex-col justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center gap-8">
         {loading ? (
           <Loader />
         ) : error ? (
           <p>{error.message}</p>
         ) : (
-          <div>
-            <div className="flex flex-col w-full md:w-1/3 mt-2">
+          <>
+            <div className="flex flex-col w-full mt-2">
               <div className="mx-auto mt-2">
-                <NFTCollectionCard
+                <NFTCollectionCardDetailed
                   name={collectionName}
                   contractAddress={collectionContractAddress}
                   maxSupply={collectionMaxSupply}
                   currentSupply={collectionCurrentSupply}
                 />
-                ;
               </div>
             </div>
-            <div className="flex flex-col md:w-2/3 w-full h-full overflow-scroll">
+            <div className="flex flex-col md:w-6/12 h-full">
               {data && data?.nftcollection[0]?.tokensMap.length !== 0 ? (
-                <div className="w-full border flex flex-col relative">
+                <div className="w-full flex flex-col relative">
                   <div
                     className={`grid grid-cols-3 md:grid-cols-5 gap-0 m-0 md:gap-2 md:mx-4`}
                   >
                     {nftcollection?.tokensMap.map((token) => {
-                      let { collection, tokenId } = token;
-                      const name = token.metadataMap?.name ?? "";
-                      const image = token.metadataMap?.image ?? "";
-                      return (
-                        <NftThumbnail
-                          name={name}
-                          image={image}
-                          collection={collection}
-                          tokenId={tokenId}
-                        />
-                      );
+                      let { collection, tokenId, metadataMap, owner } = token;
+                      if (metadataMap) {
+                        const { name, image, description, attributesMap } =
+                          metadataMap;
+                        const attributes = attributesMap.map((a) => ({
+                          trait_type: a.trait_type,
+                          value: a.value,
+                        }));
+                        return (
+                          <NftThumbnail
+                            name={name}
+                            image={image}
+                            tokenId={tokenId}
+                            onClick={() =>
+                              openNftInModal({
+                                name,
+                                imageUrl: image,
+                                description,
+                                attributes,
+                                collection,
+                                tokenId,
+                                owner,
+                              })
+                            }
+                          />
+                        );
+                      }
                     })}
                   </div>
                 </div>
@@ -164,7 +189,7 @@ const CollectionPage = () => {
                 <p> "No tokens found"</p>
               )}
             </div>
-          </div>
+          </>
         )}
         <PageSelector
           pageNumber={pageNumber}
@@ -173,6 +198,14 @@ const CollectionPage = () => {
           nextPage={nextPage}
           collectionCount={collectionCount}
         />
+
+        {selectedToken && (
+          <NftModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            token={selectedToken}
+          />
+        )}
       </div>
     </>
   );
