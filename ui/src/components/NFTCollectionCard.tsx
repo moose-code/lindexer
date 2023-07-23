@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import HyperLink from "./Hyperlink";
 
 type NFTCollectionCardProps = {
   name: string;
@@ -39,16 +40,12 @@ export const NFTCollectionCardDetailed = ({
             <tr>
               <td>Contract:</td>
               <td>
-                {
-                  <a
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    href={`https://lineascan.build/address/${contractAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {contractAddress}
-                  </a>
-                }
+                <HyperLink
+                  href={`https://lineascan.build/address/${contractAddress}`}
+                  openInNewTab
+                >
+                  {contractAddress}
+                </HyperLink>
               </td>
             </tr>
           </table>

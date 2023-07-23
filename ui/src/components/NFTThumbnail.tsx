@@ -4,11 +4,12 @@ type NftThumbNailProps = {
   image?: string;
   name: string;
   tokenId: number;
+  onClick: any;
 };
 
-const NftThumbnail = ({ image, name, tokenId }: NftThumbNailProps) => {
+const NftThumbnail = ({ image, name, tokenId, onClick }: NftThumbNailProps) => {
   return (
-    <div className="m-2 relative cursor-pointer">
+    <div onClick={onClick} className="m-2 relative cursor-pointer">
       <img
         src={image ?? PLACE_HOLDER_IMAGE_URL}
         className={"w-full rounded-xl h-full h-auto relative object-cover"}
