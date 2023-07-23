@@ -4,7 +4,7 @@ description: ERC-20 indexer
 networks:
   - id: 59140
     rpc_config:
-      url: https://linea-goerli.infura.io/v3/36857fb4550a4555ba08019b884e2a78
+      url: https://linea-goerli.infura.io/v3/be2db4ab224d45b3a70ad9c3dd7763e6
       unstable__sync_config:
         initial_block_interval: 500
         backoff_multiplicative: 0.8

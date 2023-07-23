@@ -18,8 +18,7 @@ pnpm run docker-envio-testnet
 pnpm run setup-envio-testnet
 pnpm run start-testnet
 # in another tab
-cd fetcher; 
-RPC_ENDPOINT="https://linea-goerli.infura.io/v3/<your infura key>" DATABASE_URI="postgresql://postgres:testing@localhost:5433/envio-dev" pnpm start
+cd fetcher; RPC_ENDPOINT="https://linea-goerli.infura.io/v3/<your infura key>" DATABASE_URI="postgresql://postgres:testing@localhost:5433/envio-dev" pnpm start
 ```
 ## Indexer Requirements
 

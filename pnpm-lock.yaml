@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       envio:
-        specifier: 0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f
-        version: 0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f
+        specifier: 0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1
+        version: 0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1
       generated:
         specifier: workspace:*
         version: link:generated-testnet
@@ -6570,37 +6570,37 @@ packages:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
     dev: false
 
-  /envio-darwin-arm64@0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f:
-    resolution: {integrity: sha512-6lVNw6E3ORdqyXtlSWW60XAQhBsiNWyIjbAB+qfwQaOWsIS+JUvZyqVilfPZ5CcFnhKTXnV2oqjYreH1IVhq+A==}
+  /envio-darwin-arm64@0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1:
+    resolution: {integrity: sha512-c5+VHb+0ylaUbBtIksi5zCjtWAi54hlR7OZFIhnXJwkYwx2zwyFAXG+YTG9EgEJm8FFkKelzd8pSglIohWIUSg==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /envio-darwin-x64@0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f:
-    resolution: {integrity: sha512-PQX8Kopgv2zapguIBrTGHGYqjxIJgaP58fszzEmXD0Y82E0jLALUDt1kre4MxVOSYOgVNJLtNPBTEpHmfblkQw==}
+  /envio-darwin-x64@0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1:
+    resolution: {integrity: sha512-b4E+S877c4BXG/2L8624rXBDIVyfoV7W24kkYRlcS3Q9aPz6wC/Ul5WtaIUyU9Ahty3oJx3yiPssp8jz5AuekQ==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /envio-linux-x64@0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f:
-    resolution: {integrity: sha512-evb40ye5r7Vfbaf8QbP6/Pt4NiB80jO+LC/SmpjIuyMotHdjNdHKipZ1UyXNvL+4xOhwuaPJrnlyfwOxcLWJwA==}
+  /envio-linux-x64@0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1:
+    resolution: {integrity: sha512-yyX44/+il4JYI4+ROZ5OD1an4IaF7YvFsQheSOuTtMN4TyS/HdDoI9xbLAdrPnNYGlTF2zQ9kmRYRqd55BPZpg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /envio@0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f:
-    resolution: {integrity: sha512-CiXaM8g085dW0yo3tmW9l+Aq4aVs4PcG2ErLOdXMH1LhKtHylY6dY+l1EPmyTN6Qnr9IdTvN0ha162cdITfbmQ==}
+  /envio@0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1:
+    resolution: {integrity: sha512-hrLqCkak1TJO9dgECxEKmhzm9RnvyDaYbCN7jNX9cxLLEwsyZWJrcqbTIbzWWYLBfr0qVhW6QlcybsJhrI0yEw==}
     hasBin: true
     optionalDependencies:
-      envio-darwin-arm64: 0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f
-      envio-darwin-x64: 0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f
-      envio-linux-x64: 0.0.0-force-npm-publish-eth-paris-20230723012009-f7e066f
+      envio-darwin-arm64: 0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1
+      envio-darwin-x64: 0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1
+      envio-linux-x64: 0.0.0-force-npm-publish-eth-paris-20230723034653-66e71a1
     dev: false
 
   /err-code@3.0.1:
