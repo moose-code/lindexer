@@ -4,5 +4,6 @@ import tailwindcss from "tailwindcss";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "moose-code/lindexer",
   plugins: [react(), tailwindcss()],
 });
