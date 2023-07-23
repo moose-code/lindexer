@@ -1,3 +1,26 @@
+# Lindexer (the linear NFT indexer)
+
+To run this code on mainnet:
+
+```bash
+pnpm run build-envio
+pnpm run docker-envio
+pnpm run setup-envio
+pnpm run start
+# in another tab
+cd fetcher; pnpm start
+```
+
+To run on testent:
+```bash
+pnpm run build-envio-testnet
+pnpm run docker-envio-testnet
+pnpm run setup-envio-testnet
+pnpm run start-testnet
+# in another tab
+cd fetcher; 
+RPC_ENDPOINT="https://linea-goerli.infura.io/v3/<your infura key>" DATABASE_URI="postgresql://postgres:testing@localhost:5433/envio-dev" pnpm start
+```
 ## Indexer Requirements
 
 The following files are required to use the Indexer:
