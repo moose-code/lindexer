@@ -1,4 +1,4 @@
-# Lindexer (the linear NFT indexer)
+# Lindexer (the linea NFT indexer)
 
 To run this code on mainnet:
 
