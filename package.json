@@ -5,7 +5,7 @@
     "build-envio": "envio codegen",
     "docker-envio": "envio local docker up",
     "setup-envio": "envio local db-migrate setup",
-    "start": "node generated-testnet/src/Index.bs.js",
+    "start": "node generated/src/Index.bs.js",
     "build-envio-testnet": "envio codegen -o generated-testnet -c config.testnet.yaml ",
     "docker-envio-testnet-broken": "PG_PORT=5433 HASURA_EXTERNAL_PORT=8081 envio local docker up",
     "docker-envio-testnet": "PG_PORT=5433 HASURA_EXTERNAL_PORT=8081 docker compose -p lindexer-testnet -f ./generated/docker-compose.yaml up -d",
