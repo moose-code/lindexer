@@ -16,8 +16,16 @@ networks:
     contracts:
       - name: ERC721
         address:
-          #Linea Ape for mainnet?
-          - "0x7f48CA9A7d686e3043Dab5602567f5a5c44EeE0b"
+          # LUCIA
+          - "0xF18CDB167A1979224AF5400c4b13251506157743"
+          # insiders
+          - "0x6AB1CB569ce474Be98e6bDA68d8CEfAAb67e0729"
+          # LiNa
+          - "0x3Fae32354a1F47Fef1fDc1856944A0fE26Df2705"
+          # bored ape yacht
+          - "0xd9A8b96f7c8FEd01d5B3730Fbb28B86BDAa574CA"
+          # zonic
+          - "0x18b64749666fD9eaa188F1A732D26074dd03dF57"
           # Parimals
           - "0xDff3E7c548857399BFF017F7326977eaedBBE948"
         handler: ./src/EventHandlers.bs.js
