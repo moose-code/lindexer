@@ -435,6 +435,69 @@ export type Nftcollection = {
   maxSupply?: Maybe<Scalars['numeric']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   symbol?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  tokensMap: Array<Token>;
+  /** An aggregate relationship */
+  tokensMap_aggregate: Token_Aggregate;
+};
+
+
+/** columns and relationships of "nftcollection" */
+export type NftcollectionTokensMapArgs = {
+  distinct_on?: InputMaybe<Array<Token_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Token_Order_By>>;
+  where?: InputMaybe<Token_Bool_Exp>;
+};
+
+
+/** columns and relationships of "nftcollection" */
+export type NftcollectionTokensMap_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Token_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Token_Order_By>>;
+  where?: InputMaybe<Token_Bool_Exp>;
+};
+
+/** aggregated selection of "nftcollection" */
+export type Nftcollection_Aggregate = {
+  __typename?: 'nftcollection_aggregate';
+  aggregate?: Maybe<Nftcollection_Aggregate_Fields>;
+  nodes: Array<Nftcollection>;
+};
+
+/** aggregate fields of "nftcollection" */
+export type Nftcollection_Aggregate_Fields = {
+  __typename?: 'nftcollection_aggregate_fields';
+  avg?: Maybe<Nftcollection_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Nftcollection_Max_Fields>;
+  min?: Maybe<Nftcollection_Min_Fields>;
+  stddev?: Maybe<Nftcollection_Stddev_Fields>;
+  stddev_pop?: Maybe<Nftcollection_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Nftcollection_Stddev_Samp_Fields>;
+  sum?: Maybe<Nftcollection_Sum_Fields>;
+  var_pop?: Maybe<Nftcollection_Var_Pop_Fields>;
+  var_samp?: Maybe<Nftcollection_Var_Samp_Fields>;
+  variance?: Maybe<Nftcollection_Variance_Fields>;
+};
+
+
+/** aggregate fields of "nftcollection" */
+export type Nftcollection_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Nftcollection_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type Nftcollection_Avg_Fields = {
+  __typename?: 'nftcollection_avg_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to filter rows from the table "nftcollection". All fields are combined with a logical 'AND'. */
@@ -451,6 +514,36 @@ export type Nftcollection_Bool_Exp = {
   maxSupply?: InputMaybe<Numeric_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   symbol?: InputMaybe<String_Comparison_Exp>;
+  tokensMap?: InputMaybe<Token_Bool_Exp>;
+  tokensMap_aggregate?: InputMaybe<Token_Aggregate_Bool_Exp>;
+};
+
+/** aggregate max on columns */
+export type Nftcollection_Max_Fields = {
+  __typename?: 'nftcollection_max_fields';
+  contractAddress?: Maybe<Scalars['String']['output']>;
+  currentSupply?: Maybe<Scalars['Int']['output']>;
+  db_write_timestamp?: Maybe<Scalars['timestamp']['output']>;
+  event_chain_id?: Maybe<Scalars['Int']['output']>;
+  event_id?: Maybe<Scalars['numeric']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  maxSupply?: Maybe<Scalars['numeric']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  symbol?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Nftcollection_Min_Fields = {
+  __typename?: 'nftcollection_min_fields';
+  contractAddress?: Maybe<Scalars['String']['output']>;
+  currentSupply?: Maybe<Scalars['Int']['output']>;
+  db_write_timestamp?: Maybe<Scalars['timestamp']['output']>;
+  event_chain_id?: Maybe<Scalars['Int']['output']>;
+  event_id?: Maybe<Scalars['numeric']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  maxSupply?: Maybe<Scalars['numeric']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  symbol?: Maybe<Scalars['String']['output']>;
 };
 
 /** Ordering options when selecting data from "nftcollection". */
@@ -464,6 +557,7 @@ export type Nftcollection_Order_By = {
   maxSupply?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   symbol?: InputMaybe<Order_By>;
+  tokensMap_aggregate?: InputMaybe<Token_Aggregate_Order_By>;
 };
 
 /** select columns of table "nftcollection" */
@@ -488,6 +582,33 @@ export enum Nftcollection_Select_Column {
   Symbol = 'symbol'
 }
 
+/** aggregate stddev on columns */
+export type Nftcollection_Stddev_Fields = {
+  __typename?: 'nftcollection_stddev_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Nftcollection_Stddev_Pop_Fields = {
+  __typename?: 'nftcollection_stddev_pop_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Nftcollection_Stddev_Samp_Fields = {
+  __typename?: 'nftcollection_stddev_samp_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
+};
+
 /** Streaming cursor of the table "nftcollection" */
 export type Nftcollection_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -507,6 +628,42 @@ export type Nftcollection_Stream_Cursor_Value_Input = {
   maxSupply?: InputMaybe<Scalars['numeric']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   symbol?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Nftcollection_Sum_Fields = {
+  __typename?: 'nftcollection_sum_fields';
+  currentSupply?: Maybe<Scalars['Int']['output']>;
+  event_chain_id?: Maybe<Scalars['Int']['output']>;
+  event_id?: Maybe<Scalars['numeric']['output']>;
+  maxSupply?: Maybe<Scalars['numeric']['output']>;
+};
+
+/** aggregate var_pop on columns */
+export type Nftcollection_Var_Pop_Fields = {
+  __typename?: 'nftcollection_var_pop_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type Nftcollection_Var_Samp_Fields = {
+  __typename?: 'nftcollection_var_samp_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type Nftcollection_Variance_Fields = {
+  __typename?: 'nftcollection_variance_fields';
+  currentSupply?: Maybe<Scalars['Float']['output']>;
+  event_chain_id?: Maybe<Scalars['Float']['output']>;
+  event_id?: Maybe<Scalars['Float']['output']>;
+  maxSupply?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
@@ -550,6 +707,8 @@ export type Query_Root = {
   metadata: Array<Metadata>;
   /** fetch data from the table: "nftcollection" */
   nftcollection: Array<Nftcollection>;
+  /** fetch aggregated fields from the table: "nftcollection" */
+  nftcollection_aggregate: Nftcollection_Aggregate;
   /** fetch data from the table: "raw_events" */
   raw_events: Array<Raw_Events>;
   /** fetch data from the table: "raw_events" using primary key columns */
@@ -597,6 +756,15 @@ export type Query_RootMetadataArgs = {
 
 
 export type Query_RootNftcollectionArgs = {
+  distinct_on?: InputMaybe<Array<Nftcollection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Nftcollection_Order_By>>;
+  where?: InputMaybe<Nftcollection_Bool_Exp>;
+};
+
+
+export type Query_RootNftcollection_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Nftcollection_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -774,6 +942,8 @@ export type Subscription_Root = {
   metadata_stream: Array<Metadata>;
   /** fetch data from the table: "nftcollection" */
   nftcollection: Array<Nftcollection>;
+  /** fetch aggregated fields from the table: "nftcollection" */
+  nftcollection_aggregate: Nftcollection_Aggregate;
   /** fetch data from the table in a streaming manner: "nftcollection" */
   nftcollection_stream: Array<Nftcollection>;
   /** fetch data from the table: "raw_events" */
@@ -850,6 +1020,15 @@ export type Subscription_RootMetadata_StreamArgs = {
 
 
 export type Subscription_RootNftcollectionArgs = {
+  distinct_on?: InputMaybe<Array<Nftcollection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Nftcollection_Order_By>>;
+  where?: InputMaybe<Nftcollection_Bool_Exp>;
+};
+
+
+export type Subscription_RootNftcollection_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Nftcollection_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1345,6 +1524,16 @@ export type GetNftsWithCollectionIdQueryVariables = Exact<{
 
 export type GetNftsWithCollectionIdQuery = { __typename?: 'query_root', token: Array<{ __typename?: 'token', id: string, collection: string, owner: string, tokenId: any, metadataMap?: { __typename?: 'metadata', name: string, description: string, image: string, attributesMap: Array<{ __typename?: 'attribute', trait_type: string, value: string }> } | null }>, token_aggregate: { __typename?: 'token_aggregate', aggregate?: { __typename?: 'token_aggregate_fields', count: number } | null } };
 
+export type GetCollectionWithTokensQueryVariables = Exact<{
+  collectionId: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
+
+
+export type GetCollectionWithTokensQuery = { __typename?: 'query_root', nftcollection: Array<{ __typename?: 'nftcollection', name?: string | null, currentSupply: number, maxSupply?: any | null, contractAddress: string, tokensMap: Array<{ __typename?: 'token', id: string, collection: string, owner: string, tokenId: any, metadataMap?: { __typename?: 'metadata', name: string, description: string, image: string, attributesMap: Array<{ __typename?: 'attribute', trait_type: string, value: string }> } | null }> }>, token_aggregate: { __typename?: 'token_aggregate', aggregate?: { __typename?: 'token_aggregate_fields', count: number } | null } };
+
 
 export const GetNftCollectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNftCollections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nftcollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"contractAddress"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxSupply"}},{"kind":"Field","name":{"kind":"Name","value":"currentSupply"}}]}}]}}]} as unknown as DocumentNode<GetNftCollectionsQuery, GetNftCollectionsQueryVariables>;
 export const GetNftsWithCollectionIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNftsWithCollectionId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"collection"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"tokenId"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"collection"}},{"kind":"Field","name":{"kind":"Name","value":"owner"}},{"kind":"Field","name":{"kind":"Name","value":"tokenId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataMap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"attributesMap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trait_type"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"token_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"collection"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetNftsWithCollectionIdQuery, GetNftsWithCollectionIdQueryVariables>;
+export const GetCollectionWithTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCollectionWithTokens"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nftcollection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"contractAddress"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"currentSupply"}},{"kind":"Field","name":{"kind":"Name","value":"maxSupply"}},{"kind":"Field","name":{"kind":"Name","value":"contractAddress"}},{"kind":"Field","name":{"kind":"Name","value":"tokensMap"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"collection"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"tokenId"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"collection"}},{"kind":"Field","name":{"kind":"Name","value":"owner"}},{"kind":"Field","name":{"kind":"Name","value":"tokenId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataMap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"attributesMap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trait_type"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"token_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"collection"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetCollectionWithTokensQuery, GetCollectionWithTokensQueryVariables>;

@@ -152,6 +152,7 @@ SELECT
 "symbol",
 "maxSupply",
 "currentSupply",
+
 event_chain_id, 
 event_id
 FROM public.nftcollection
@@ -174,6 +175,7 @@ ${sql(combinedEntityAndEventData,
     "symbol",
     "maxSupply",
     "currentSupply",
+    
     "event_chain_id",
     "event_id",
   )}
@@ -185,6 +187,7 @@ ${sql(combinedEntityAndEventData,
   "symbol" = EXCLUDED."symbol",
   "maxSupply" = EXCLUDED."maxSupply",
   "currentSupply" = EXCLUDED."currentSupply",
+  
   "event_chain_id" = EXCLUDED."event_chain_id",
   "event_id" = EXCLUDED."event_id";`;
 }

@@ -137,6 +137,13 @@ let trackAllTables = async () => {
   let _ = await trackTable(~tableName="attribute")
   let _ = await createSelectPermissions(~tableName="attribute")
   let _ = await createEntityRelationship(
+    ~tableName="nftcollection",
+    ~relationshipType="array",
+    ~relationalKey="tokens",
+    ~mappedEntity="token",
+    ~derivedFromFieldKey="collection",
+  )
+  let _ = await createEntityRelationship(
     ~tableName="user",
     ~relationshipType="array",
     ~relationalKey="tokens",

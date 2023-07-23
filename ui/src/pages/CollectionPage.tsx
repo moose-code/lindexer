@@ -2,8 +2,9 @@ import React from "react";
 import Loader from "../components/Loader";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_NFTS_AT_COLLECTION_ID } from "../gql_queries.js";
+import { GET_COLLECTION_WITH_TOKENS } from "../gql_queries.js";
 import NftThumbnail from "../components/NFTThumbnail";
+import NFTCollectionCard from "../components/NFTCollectionCard.js";
 
 const PAGE_SIZE = 15; // best as multiples of 5
 
@@ -93,7 +94,7 @@ const CollectionPage = () => {
 
   const skip = (pageNumber - 1) * PAGE_SIZE;
 
-  let { data, loading, error } = useQuery(GET_NFTS_AT_COLLECTION_ID, {
+  let { data, loading, error } = useQuery(GET_COLLECTION_WITH_TOKENS, {
     variables: { collectionId: collection ?? "", limit: PAGE_SIZE, skip },
   });
 
@@ -112,61 +113,66 @@ const CollectionPage = () => {
   };
 
   const collectionCount = data?.token_aggregate.aggregate?.count ?? 0;
+  const nftcollection = data?.nftcollection[0];
+  const collectionName = nftcollection?.name ?? "";
+  const collectionContractAddress = nftcollection?.contractAddress ?? "";
+  const collectionMaxSupply = nftcollection?.maxSupply ?? 0;
+  const collectionCurrentSupply = nftcollection?.currentSupply ?? 0;
 
   return (
     <>
       <div className="w-full flex md:flex-row flex-col justify-center items-center">
-        {/* <div className="flex flex-col w-full md:w-1/3 mt-2"> */}
-        {/*   {collectionFetchState.loading ? ( */}
-        {/*     <Loader /> */}
-        {/*   ) : collectionFetchState.errorMessage ? ( */}
-        {/*     <p>{collectionFetchState.errorMessage}</p> */}
-        {/*   ) : collectionFetchState.tokens != {} ? ( */}
-        {/*     <div className="mx-auto mt-2"> */}
-        {/*       <NFTCollectionCardDetailed */}
-        {/*         collection={collectionFetchState.nftcollection} */}
-        {/*       /> */}
-        {/*     </div> */}
-        {/*   ) : ( */}
-        {/*     "No collection found" */}
-        {/*   )} */}
-        {/* </div> */}
-        <div className="flex flex-col md:w-2/3 w-full h-full overflow-scroll">
-          {loading ? (
-            <Loader />
-          ) : error ? (
-            <p>{error.message}</p>
-          ) : data && data?.token.length !== 0 ? (
-            <div className="w-full border flex flex-col relative">
-              <div
-                className={`grid grid-cols-3 md:grid-cols-5 gap-0 m-0 md:gap-2 md:mx-4`}
-              >
-                {data.token.map((token) => {
-                  let { collection, tokenId } = token;
-                  const name = token.metadataMap?.name ?? "";
-                  const image = token.metadataMap?.image ?? "";
-                  return (
-                    <NftThumbnail
-                      name={name}
-                      image={image}
-                      collection={collection}
-                      tokenId={tokenId}
-                    />
-                  );
-                })}
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <p>{error.message}</p>
+        ) : (
+          <div>
+            <div className="flex flex-col w-full md:w-1/3 mt-2">
+              <div className="mx-auto mt-2">
+                <NFTCollectionCard
+                  name={collectionName}
+                  contractAddress={collectionContractAddress}
+                  maxSupply={collectionMaxSupply}
+                  currentSupply={collectionCurrentSupply}
+                />
+                ;
               </div>
             </div>
-          ) : (
-            "No tokens found"
-          )}
-          <PageSelector
-            pageNumber={pageNumber}
-            goToPage={goToPage}
-            previousPage={previousPage}
-            nextPage={nextPage}
-            collectionCount={collectionCount}
-          />
-        </div>
+            <div className="flex flex-col md:w-2/3 w-full h-full overflow-scroll">
+              {data && data?.nftcollection[0]?.tokensMap.length !== 0 ? (
+                <div className="w-full border flex flex-col relative">
+                  <div
+                    className={`grid grid-cols-3 md:grid-cols-5 gap-0 m-0 md:gap-2 md:mx-4`}
+                  >
+                    {nftcollection?.tokensMap.map((token) => {
+                      let { collection, tokenId } = token;
+                      const name = token.metadataMap?.name ?? "";
+                      const image = token.metadataMap?.image ?? "";
+                      return (
+                        <NftThumbnail
+                          name={name}
+                          image={image}
+                          collection={collection}
+                          tokenId={tokenId}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <p> "No tokens found"</p>
+              )}
+            </div>
+          </div>
+        )}
+        <PageSelector
+          pageNumber={pageNumber}
+          goToPage={goToPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          collectionCount={collectionCount}
+        />
       </div>
     </>
   );

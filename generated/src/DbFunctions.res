@@ -86,6 +86,7 @@ module Nftcollection = {
     symbol: option<string>,
     maxSupply: option<string>,
     currentSupply: int,
+    tokens: array<id>,
     @as("event_chain_id") chainId: int,
     @as("event_id") eventId: Ethers.BigInt.t,
   }
