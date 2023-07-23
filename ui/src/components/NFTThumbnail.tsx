@@ -1,22 +1,31 @@
+import { PLACE_HOLDER_IMAGE_URL } from "../constants";
+
 type NftThumbNailProps = {
-  image: string;
+  image?: string;
   name: string;
-  collection: string;
   tokenId: number;
 };
 
-const NftThumbnail = ({
-  image,
-  name,
-  tokenId,
-  collection,
-}: NftThumbNailProps) => {
+const NftThumbnail = ({ image, name, tokenId }: NftThumbNailProps) => {
   return (
-    <div className="m-2">
-      <img src={image} className={"w-full max-w-[300px] h-auto "} />
-      <p className={`text-xs`}>{name}</p>
-      <p className={`text-xs`}>{tokenId}</p>
-      <p className={`text-xs`}>{collection}</p>
+    <div className="m-2 relative cursor-pointer">
+      <img
+        src={image ?? PLACE_HOLDER_IMAGE_URL}
+        className={"w-full rounded-xl h-full h-auto relative object-cover"}
+      />
+      <p>{tokenId}</p>
+      <div className="absolute top-0 rounded opacity-0 hover:opacity-100 hover:bg-black hover:bg-opacity-80 h-full w-full flex justify-center items-center">
+        <table>
+          <tr>
+            <td className="w-5">ID:</td>
+            <td>{tokenId}</td>
+          </tr>
+          <tr>
+            <td className="w-12">Name:</td>
+            <td>{name}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   );
 };
